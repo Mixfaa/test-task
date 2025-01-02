@@ -29,7 +29,7 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
         var teamTo = transfer.teamTo();
 
         var teamFromBalance = teamFrom.balance() + transfer.teamFromReward();
-        var teamToBalance = teamTo.balance() - transfer.playerPrice();
+        var teamToBalance = teamTo.balance() - (transfer.playerPrice() + transfer.teamFromReward());
 
         teamFrom.balance(teamFromBalance);
         teamTo.balance(teamToBalance);
@@ -58,19 +58,19 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
         if (teamFrom.id().equals(teamTo.id()))
             throw PlayerTransferException.sameTeams(player, teamFrom);
 
-        var transferPrice = FootballPlayerTransfer.calculatePlayerCost(player);
+        var playerPrice = FootballPlayerTransfer.calculatePlayerCost(player);
+        var teamFromReward = FootballPlayerTransfer.calculateFromTeamReward(playerPrice, teamFrom.transferCommissionPercent());
+        var totalTransferPrice = playerPrice + teamFromReward;
 
         var buyerTeamBalance = teamTo.balance();
-        if (buyerTeamBalance < transferPrice)
+        if (buyerTeamBalance < totalTransferPrice)
             throw PlayerTransferException.teamCantAffordPlayer(player, teamTo);
-
-        var teamFromReward = FootballPlayerTransfer.calculateFromTeamReward(transferPrice, teamFrom.transferCommissionPercent());
 
         var transfer = FootballPlayerTransfer.builder()
                 .transferredPlayer(player)
                 .teamFrom(teamFrom)
                 .teamTo(teamTo)
-                .playerPrice(transferPrice)
+                .playerPrice(playerPrice)
                 .teamFromCommission(teamFrom.transferCommissionPercent())
                 .teamFromReward(teamFromReward)
                 .date(registerRequest.date())
