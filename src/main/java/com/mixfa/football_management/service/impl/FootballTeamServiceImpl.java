@@ -39,6 +39,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
 
     @Override
     public FootballTeam update(long id, FootballTeam team) throws Exception {
-        return footballTeamRepo.save(team.id(id));
+        team.setId(id);
+        return footballTeamRepo.save(team);
     }
 }

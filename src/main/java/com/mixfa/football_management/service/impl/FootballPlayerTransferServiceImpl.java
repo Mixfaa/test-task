@@ -25,17 +25,17 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
     private final FootballTeamService footballTeamService;
 
     private void finalizeTransfer(FootballPlayerTransfer transfer) throws Exception {
-        var teamFrom = transfer.teamFrom();
-        var teamTo = transfer.teamTo();
+        var teamFrom = transfer.getTeamFrom();
+        var teamTo = transfer.getTeamTo();
 
-        var teamFromBalance = teamFrom.balance() + transfer.teamFromReward();
-        var teamToBalance = teamTo.balance() - (transfer.playerPrice() + transfer.teamFromReward());
+        var teamFromBalance = teamFrom.getBalance() + transfer.getTeamFromReward();
+        var teamToBalance = teamTo.getBalance() - (transfer.getPlayerPrice() + transfer.getTeamFromReward());
 
-        teamFrom.balance(teamFromBalance);
-        teamTo.balance(teamToBalance);
+        teamFrom.setBalance(teamFromBalance);
+        teamTo.setBalance(teamToBalance);
 
-        moveToTeamNoTx(transfer.transferredPlayer(), teamTo);
-        footballTeamService.update(teamFrom.id(), teamFrom);
+        moveToTeamNoTx(transfer.getTransferredPlayer(), teamTo);
+        footballTeamService.update(teamFrom.getId(), teamFrom);
     }
 
     @Override
@@ -44,25 +44,25 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
         var player = footballPlayerService.findById(registerRequest.playerId())
                 .orElseThrow(() -> NotFoundException.playerNotFound(registerRequest.playerId()));
 
-        if (player.currentTeam() == null)
+        if (player.getCurrentTeam() == null)
             throw PlayerTransferException.orphanPlayer(player);
 
-        var teamFrom = player.currentTeam();
+        var teamFrom = player.getCurrentTeam();
         var teamTo = footballTeamService.findById(registerRequest.teamToId())
                 .orElseThrow(() -> NotFoundException.teamNotFound(registerRequest.teamToId()));
 
-        var playerTeamId = player.currentTeam().id();
-        if (playerTeamId.equals(teamTo.id()))
+        var playerTeamId = player.getCurrentTeam().getId();
+        if (playerTeamId.equals(teamTo.getId()))
             throw PlayerTransferException.playerAlreadyInTeam(player, teamTo);
 
-        if (teamFrom.id().equals(teamTo.id()))
+        if (teamFrom.getId().equals(teamTo.getId()))
             throw PlayerTransferException.sameTeams(player, teamFrom);
 
         var playerPrice = FootballPlayerTransfer.calculatePlayerCost(player);
-        var teamFromReward = FootballPlayerTransfer.calculateFromTeamReward(playerPrice, teamFrom.transferCommissionPercent());
+        var teamFromReward = FootballPlayerTransfer.calculateFromTeamReward(playerPrice, teamFrom.getTransferCommissionPercent());
         var totalTransferPrice = playerPrice + teamFromReward;
 
-        var buyerTeamBalance = teamTo.balance();
+        var buyerTeamBalance = teamTo.getBalance();
         if (buyerTeamBalance < totalTransferPrice)
             throw PlayerTransferException.teamCantAffordPlayer(player, teamTo);
 
@@ -71,7 +71,7 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
                 .teamFrom(teamFrom)
                 .teamTo(teamTo)
                 .playerPrice(playerPrice)
-                .teamFromCommission(teamFrom.transferCommissionPercent())
+                .teamFromCommission(teamFrom.getTransferCommissionPercent())
                 .teamFromReward(teamFromReward)
                 .date(registerRequest.date())
                 .build();
@@ -98,9 +98,9 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
     }
 
     private void moveToTeamNoTx(FootballPlayer player, FootballTeam team) throws Exception {
-        team.players().add(player);
-        footballPlayerService.update(player.id(), player);
-        footballTeamService.update(team.id(), team);
+        team.getPlayers().add(player);
+        footballPlayerService.update(player.getId(), player);
+        footballTeamService.update(team.getId(), team);
     }
 
     @Override

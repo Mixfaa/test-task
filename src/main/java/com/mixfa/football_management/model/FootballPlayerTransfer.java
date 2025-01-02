@@ -1,14 +1,15 @@
 package com.mixfa.football_management.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
-@Accessors(fluent = true)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -43,8 +44,8 @@ public class FootballPlayerTransfer {
 
     public static double calculatePlayerCost(FootballPlayer player) {
         var currentDateTime = LocalDateTime.now();
-        var experienceDuration = Duration.between(player.careerBeginning(), currentDateTime);
-        var ageDuration = Duration.between(player.dateOfBirth(), currentDateTime);
+        var experienceDuration = Duration.between(player.getCareerBeginning(), currentDateTime);
+        var ageDuration = Duration.between(player.getDateOfBirth(), currentDateTime);
 
         var expInMonth = experienceDuration.toDays() / 30.0;
         var ageInYears = ageDuration.toDays() / 365.0;

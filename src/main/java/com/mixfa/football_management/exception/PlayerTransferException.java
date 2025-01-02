@@ -12,26 +12,26 @@ public class PlayerTransferException extends NoStackTraceException implements Ha
 
     public static PlayerTransferException orphanPlayer(FootballPlayer player) {
         return new PlayerTransferException("The player (%s %s) is currently not in team"
-                .formatted(player.firstname(), player.lastname()));
+                .formatted(player.getFirstname(), player.getLastname()));
     }
 
     public static PlayerTransferException playerAlreadyInTeam(FootballPlayer player, FootballTeam team) {
         return new PlayerTransferException(
-                "The player (%s %s) is already in team %s".formatted(player.firstname(), player.lastname(), team.name())
+                "The player (%s %s) is already in team %s".formatted(player.getFirstname(), player.getLastname(), team.getName())
         );
     }
 
     public static PlayerTransferException sameTeams(FootballPlayer player, FootballTeam team) {
         return new PlayerTransferException(
                 "Can't transfer player (%s %s) from team %s to team %s"
-                        .formatted(player.firstname(), player.lastname(), team.name(), team.name())
+                        .formatted(player.getFirstname(), player.getLastname(), team.getName(), team.getName())
         );
     }
 
     public static PlayerTransferException teamCantAffordPlayer(FootballPlayer player, FootballTeam team) {
         return new PlayerTransferException(
                 "Team %s can`t afford player (%s %s)"
-                        .formatted(team.name(), player.firstname(), player.lastname())
+                        .formatted(team.getName(), player.getFirstname(), player.getLastname())
         );
     }
 

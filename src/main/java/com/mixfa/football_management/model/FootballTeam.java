@@ -10,14 +10,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.Check;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Accessors(fluent = true)
 @Getter
 @Setter
 @AllArgsConstructor

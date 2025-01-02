@@ -45,8 +45,9 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
 
     @Override
     public FootballPlayer update(long id, FootballPlayer footballPlayer) throws Exception {
-        validatePlayerParams(footballPlayer.dateOfBirth(), footballPlayer.careerBeginning());
-        return footballPlayerRepo.save(footballPlayer.id(id));
+        validatePlayerParams(footballPlayer.getDateOfBirth(), footballPlayer.getCareerBeginning());
+        footballPlayer.setId(id); // not thread safe?? use KOTLIN!!!
+        return footballPlayerRepo.save(footballPlayer);
     }
 
     @Override
