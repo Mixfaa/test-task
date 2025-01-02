@@ -99,8 +99,9 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
 
     private void moveToTeamNoTx(FootballPlayer player, FootballTeam team) throws Exception {
         team.getPlayers().add(player);
+        team = footballTeamService.update(team.getId(), team);
+        player.setCurrentTeam(team);
         footballPlayerService.update(player.getId(), player);
-        footballTeamService.update(team.getId(), team);
     }
 
     @Override

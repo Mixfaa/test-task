@@ -19,7 +19,7 @@ public class FootballTeamController {
     private final FootballTeamService footballTeamService;
 
     @PostMapping("/")
-    public FootballTeam insert(@Valid FootballTeam.RegisterRequest registerRequest) throws Exception {
+    public FootballTeam insert(@Valid @RequestBody FootballTeam.RegisterRequest registerRequest) throws Exception {
         return footballTeamService.save(registerRequest);
     }
 
@@ -40,7 +40,7 @@ public class FootballTeamController {
     }
 
     @PutMapping("/{id}")
-    public FootballTeam update(@PathVariable long id, FootballTeam team) throws Exception {
+    public FootballTeam update(@PathVariable long id, @RequestBody FootballTeam team) throws Exception {
         return footballTeamService.update(id, team);
     }
 }

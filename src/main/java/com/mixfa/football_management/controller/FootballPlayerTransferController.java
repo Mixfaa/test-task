@@ -18,7 +18,7 @@ public class FootballPlayerTransferController {
     private final FootballPlayerTransferService footballPlayerTransferService;
 
     @PostMapping("/")
-    public FootballPlayerTransfer makeTransfer(@Valid FootballPlayerTransfer.RegisterRequest registerRequest) throws Exception {
+    public FootballPlayerTransfer makeTransfer(@Valid @RequestBody FootballPlayerTransfer.RegisterRequest registerRequest) throws Exception {
         return footballPlayerTransferService.makeTransfer(registerRequest);
     }
 

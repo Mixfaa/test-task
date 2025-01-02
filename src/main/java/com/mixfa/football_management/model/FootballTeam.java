@@ -1,5 +1,6 @@
 package com.mixfa.football_management.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mixfa.football_management.misc.dbvalidation.FootballTeamValidation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -35,6 +36,7 @@ public class FootballTeam {
     private double balance;
 
     @OneToMany
+    @JsonManagedReference
     private Set<FootballPlayer> players;
 
     public FootballTeam(String name, double commission, double balance) {

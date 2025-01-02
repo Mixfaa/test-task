@@ -1,5 +1,6 @@
 package com.mixfa.football_management.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -26,6 +26,7 @@ public class FootballPlayer {
     private String firstname;
     @Column(length = 35)
     private String lastname;
+    @JsonBackReference
     @ManyToOne(optional = true)
     private FootballTeam currentTeam;
     private LocalDate dateOfBirth;
@@ -33,6 +34,11 @@ public class FootballPlayer {
 
     public FootballPlayer(RegisterRequest registerRequest) {
         this(null, registerRequest.firstname, registerRequest.lastname, null, registerRequest.dateOfBirth, registerRequest.careerBeginning);
+    }
+
+    public Long getCurrentTeamId() {
+        if (currentTeam == null) return null;
+        return currentTeam.getId();
     }
 
     public record RegisterRequest(@NotBlank String firstname, @NotBlank String lastname,
