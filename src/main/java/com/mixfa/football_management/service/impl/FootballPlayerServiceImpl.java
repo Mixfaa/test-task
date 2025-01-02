@@ -1,38 +1,52 @@
 package com.mixfa.football_management.service.impl;
 
+import com.mixfa.football_management.exception.ValidationException;
 import com.mixfa.football_management.misc.LimitedPageable;
+import com.mixfa.football_management.misc.dbvalidation.FootballPlayerValidation;
 import com.mixfa.football_management.model.FootballPlayer;
-import com.mixfa.football_management.model.FootballTeam;
 import com.mixfa.football_management.service.FootballPlayerService;
 import com.mixfa.football_management.service.repo.FootballPlayerRepo;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-@Validated
 @RequiredArgsConstructor
 public class FootballPlayerServiceImpl implements FootballPlayerService {
     private final FootballPlayerRepo footballPlayerRepo;
 
+    private void validatePlayerParams(
+            LocalDateTime dateOfBirth,
+            LocalDateTime careerBeginning
+    ) throws Exception {
+        var currentTime = LocalDateTime.now();
+
+        if (dateOfBirth.isAfter(currentTime) || dateOfBirth.isEqual(currentTime))
+            throw new ValidationException(FootballPlayerValidation.MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST);
+
+        if (careerBeginning.isBefore(dateOfBirth) ||
+                careerBeginning.isEqual(dateOfBirth))
+            throw new ValidationException(FootballPlayerValidation.MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE);
+
+        if (careerBeginning.isAfter(currentTime) || careerBeginning.isEqual(currentTime))
+            throw new ValidationException(FootballPlayerValidation.MSG_CAREER_BEGINNING_MUST_BE_IN_PAST);
+    }
+
     @Override
-    public FootballPlayer save(@Valid FootballPlayer.RegisterRequest registerRequest) {
+    public FootballPlayer save(FootballPlayer.RegisterRequest registerRequest) throws Exception {
+        validatePlayerParams(registerRequest.dateOfBirth(), registerRequest.careerBeginning());
+
         var footballPlayer = new FootballPlayer(registerRequest);
         return footballPlayerRepo.save(footballPlayer);
     }
 
     @Override
     public FootballPlayer update(long id, FootballPlayer footballPlayer) throws Exception {
+        validatePlayerParams(footballPlayer.dateOfBirth(), footballPlayer.careerBeginning());
         return footballPlayerRepo.save(footballPlayer.id(id));
-    }
-
-    @Override
-    public FootballPlayer moveToTeam(FootballPlayer footballPlayer, FootballTeam team) {
-        return footballPlayerRepo.save(footballPlayer.currentTeam(team));
     }
 
     @Override

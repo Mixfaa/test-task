@@ -1,10 +1,7 @@
 package com.mixfa.football_management.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.time.Duration;
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@lombok.Builder
 @Table(name = FootballPlayerTransfer.TABLE_NAME)
 public class FootballPlayerTransfer {
     @Id
@@ -31,7 +29,7 @@ public class FootballPlayerTransfer {
     private FootballTeam teamTo;
 
     private double playerPrice;
-    private double fromTeamCommission;
+    private double teamFromCommission;
     private double teamFromReward;
 
     private LocalDateTime date;
@@ -42,7 +40,7 @@ public class FootballPlayerTransfer {
             LocalDateTime date
     ) {
     }
-
+ 
     public static double calculatePlayerCost(FootballPlayer player) {
         var currentDateTime = LocalDateTime.now();
         var experienceDuration = Duration.between(player.careerBeginning(), currentDateTime);

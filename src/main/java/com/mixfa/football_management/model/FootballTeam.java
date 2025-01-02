@@ -39,6 +39,14 @@ public class FootballTeam {
     @OneToMany
     private Set<FootballPlayer> players;
 
+    public FootballTeam(String name, double commission, double balance) {
+        this.id = null;
+        this.name = name;
+        this.transferCommissionPercent = commission;
+        this.balance = balance;
+        this.players = new HashSet<>();
+    }
+
     public FootballTeam(RegisterRequest registerRequest) {
         this(
                 null,
@@ -50,12 +58,13 @@ public class FootballTeam {
     }
 
     public record RegisterRequest(
-            @NotBlank
+            @NotBlank(message = "Name must not be empty")
             String name,
             @NotNull
-            @Min(value = 0)
-            @Max(value = 10)
+            @Min(value = 0, message = "Transfer commission must be >= 0")
+            @Max(value = 10, message = "Transfer commission must be <= 10")
             double transferCommission,
+            @Min(value = 0, message = "Team balance must be >= 0")
             double balance
     ) {
     }

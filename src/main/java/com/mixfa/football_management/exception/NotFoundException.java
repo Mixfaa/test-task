@@ -9,15 +9,15 @@ public class NotFoundException extends NoStackTraceException implements HasHttpS
     }
 
     public static NotFoundException playerNotFound(long id) {
-        return new NotFoundException("player " + id);
+        return new NotFoundException(STR."player \{id}");
     }
 
     public static NotFoundException teamNotFound(long id) {
-        return new NotFoundException("Team " + id);
+        return new NotFoundException(STR."Team \{id}");
     }
 
     public static NotFoundException transferNotFound(long id){
-        return new NotFoundException("Transfer " + id);
+        return new NotFoundException(STR."Transfer \{id}");
     }
 
     @Override

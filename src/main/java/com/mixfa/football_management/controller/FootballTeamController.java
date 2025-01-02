@@ -5,18 +5,21 @@ import com.mixfa.football_management.exception.NotFoundException;
 import com.mixfa.football_management.misc.LimitedPageable;
 import com.mixfa.football_management.model.FootballTeam;
 import com.mixfa.football_management.service.FootballTeamService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/v1/footbalteams")
 public class FootballTeamController {
     private final FootballTeamService footballTeamService;
 
     @PostMapping("/")
-    public FootballTeam insert(FootballTeam.RegisterRequest registerRequest) throws Exception {
+    public FootballTeam insert(@Valid FootballTeam.RegisterRequest registerRequest) throws Exception {
         return footballTeamService.save(registerRequest);
     }
 

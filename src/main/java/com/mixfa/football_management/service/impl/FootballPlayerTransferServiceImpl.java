@@ -3,7 +3,9 @@ package com.mixfa.football_management.service.impl;
 import com.mixfa.football_management.exception.NotFoundException;
 import com.mixfa.football_management.exception.PlayerTransferException;
 import com.mixfa.football_management.misc.LimitedPageable;
+import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballPlayerTransfer;
+import com.mixfa.football_management.model.FootballTeam;
 import com.mixfa.football_management.service.FootballPlayerService;
 import com.mixfa.football_management.service.FootballPlayerTransferService;
 import com.mixfa.football_management.service.FootballTeamService;
@@ -21,6 +23,20 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
     private final FootballPlayerTransferRepo footballPlayerTransferRepo;
     private final FootballPlayerService footballPlayerService;
     private final FootballTeamService footballTeamService;
+
+    private void finalizeTransfer(FootballPlayerTransfer transfer) throws Exception {
+        var teamFrom = transfer.teamFrom();
+        var teamTo = transfer.teamTo();
+
+        var teamFromBalance = teamFrom.balance() + transfer.teamFromReward();
+        var teamToBalance = teamTo.balance() - transfer.playerPrice();
+
+        teamFrom.balance(teamFromBalance);
+        teamTo.balance(teamToBalance);
+
+        moveToTeamNoTx(transfer.transferredPlayer(), teamTo);
+        footballTeamService.update(teamFrom.id(), teamFrom);
+    }
 
     @Override
     @Transactional
@@ -48,21 +64,20 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
         if (buyerTeamBalance < transferPrice)
             throw PlayerTransferException.teamCantAffordPlayer(player, teamTo);
 
-        var fromTeamReward = FootballPlayerTransfer.calculateFromTeamReward(transferPrice, teamFrom.transferCommissionPercent());
+        var teamFromReward = FootballPlayerTransfer.calculateFromTeamReward(transferPrice, teamFrom.transferCommissionPercent());
 
-        var transfer = new FootballPlayerTransfer(
-                null,
-                player,
-                teamFrom,
-                teamTo,
-                transferPrice,
-                teamFrom.transferCommissionPercent(),
-                fromTeamReward,
-                registerRequest.date()
-        );
+        var transfer = FootballPlayerTransfer.builder()
+                .transferredPlayer(player)
+                .teamFrom(teamFrom)
+                .teamTo(teamTo)
+                .playerPrice(transferPrice)
+                .teamFromCommission(teamFrom.transferCommissionPercent())
+                .teamFromReward(teamFromReward)
+                .date(registerRequest.date())
+                .build();
 
         transfer = footballPlayerTransferRepo.save(transfer);
-        footballTeamService.executeTransfer(transfer);
+        finalizeTransfer(transfer);
 
         return transfer;
     }
@@ -80,5 +95,17 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
     @Override
     public void deleteById(long id) {
         footballPlayerTransferRepo.deleteById(id);
+    }
+
+    private void moveToTeamNoTx(FootballPlayer player, FootballTeam team) throws Exception {
+        team.players().add(player);
+        footballPlayerService.update(player.id(), player);
+        footballTeamService.update(team.id(), team);
+    }
+
+    @Override
+    @Transactional
+    public void moveToTeam(FootballPlayer player, FootballTeam team) throws Exception {
+        moveToTeamNoTx(player, team);
     }
 }

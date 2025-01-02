@@ -11,6 +11,6 @@ public interface ValidationErrors {
     }
 
     static String makeErrorId(String tableName, String errorId) {
-        return tableName + "." + errorId;
+        return STR."\{tableName}.\{errorId}";
     }
 }

@@ -37,11 +37,11 @@ public class ControllerAdvice {
                     httpStatusCode = withHttpCode.httpStatusCode();
                 }
                 case ConstraintViolationException violationException -> {
-                    errorMessage = dbLayerValidation.resolveErrorMessage(violationException.getConstraintName());
+                    errorMessage = dbLayerValidation.getErrorMessage(violationException.getConstraintName());
                     shouldBreak = true;
                 }
                 case SQLException sqlException -> {
-                    errorMessage = dbLayerValidation.resolveErrorMessage(sqlException.getLocalizedMessage());
+                    errorMessage = dbLayerValidation.getErrorMessage(sqlException.getLocalizedMessage());
                     shouldBreak = true;
                 }
                 case jakarta.validation.ConstraintViolationException constraintViolationException -> {

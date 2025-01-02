@@ -44,7 +44,7 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
                     END IF;
                    \s
                     -- Check from_team commission (between 0 and 10)
-                    IF NEW.from_team_commission < 0 OR NEW.from_team_commission > 10 THEN
+                    IF NEW.team_from_commission < 0 OR NEW.team_from_commission > 10 THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_FROM_TEAM_COMMISSION}';
                     END IF;

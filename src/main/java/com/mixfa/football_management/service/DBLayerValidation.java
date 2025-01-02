@@ -27,7 +27,7 @@ public class DBLayerValidation implements CommandLineRunner {
             errorIdToMsgMap.putAll(errors.errorIdToMessageMap());
     }
 
-    public String resolveErrorMessage(String errorId) {
+    public String getErrorMessage(String errorId) {
         if (errorId == null) return UNKNOWN_ERROR;
         return errorIdToMsgMap.getOrDefault(errorId, UNKNOWN_ERROR);
     }
