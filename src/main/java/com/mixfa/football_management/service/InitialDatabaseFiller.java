@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,64 +26,64 @@ public class InitialDatabaseFiller implements CommandLineRunner {
 
     private static final List<FootballPlayer.RegisterRequest> players = List.of(
             new FootballPlayer.RegisterRequest("Lionel", "Messi",
-                    LocalDateTime.of(1987, 6, 24, 0, 0),
-                    LocalDateTime.of(2004, 10, 16, 0, 0)),
+                    LocalDate.of(1987, 6, 24),
+                    LocalDate.of(2004, 10, 16)),
 
             new FootballPlayer.RegisterRequest("Cristiano", "Ronaldo",
-                    LocalDateTime.of(1985, 2, 5, 0, 0),
-                    LocalDateTime.of(2002, 8, 14, 0, 0)),
+                    LocalDate.of(1985, 2, 5),
+                    LocalDate.of(2002, 8, 14)),
 
             new FootballPlayer.RegisterRequest("Kylian", "Mbappé",
-                    LocalDateTime.of(1998, 12, 20, 0, 0),
-                    LocalDateTime.of(2015, 12, 2, 0, 0)),
+                    LocalDate.of(1998, 12, 20),
+                    LocalDate.of(2015, 12, 2)),
 
             new FootballPlayer.RegisterRequest("Neymar", "Jr",
-                    LocalDateTime.of(1992, 2, 5, 0, 0),
-                    LocalDateTime.of(2009, 3, 7, 0, 0)),
+                    LocalDate.of(1992, 2, 5),
+                    LocalDate.of(2009, 3, 7)),
 
             new FootballPlayer.RegisterRequest("Robert", "Lewandowski",
-                    LocalDateTime.of(1988, 8, 21, 0, 0),
-                    LocalDateTime.of(2005, 6, 17, 0, 0)),
+                    LocalDate.of(1988, 8, 21),
+                    LocalDate.of(2005, 6, 17)),
 
             new FootballPlayer.RegisterRequest("Kevin", "De Bruyne",
-                    LocalDateTime.of(1991, 6, 28, 0, 0),
-                    LocalDateTime.of(2008, 9, 13, 0, 0)),
+                    LocalDate.of(1991, 6, 28),
+                    LocalDate.of(2008, 9, 13)),
 
             new FootballPlayer.RegisterRequest("Mohamed", "Salah",
-                    LocalDateTime.of(1992, 6, 15, 0, 0),
-                    LocalDateTime.of(2010, 3, 3, 0, 0)),
+                    LocalDate.of(1992, 6, 15),
+                    LocalDate.of(2010, 3, 3)),
 
             new FootballPlayer.RegisterRequest("Virgil", "van Dijk",
-                    LocalDateTime.of(1991, 7, 8, 0, 0),
-                    LocalDateTime.of(2009, 5, 9, 0, 0)),
+                    LocalDate.of(1991, 7, 8),
+                    LocalDate.of(2009, 5, 9)),
 
             new FootballPlayer.RegisterRequest("Erling", "Haaland",
-                    LocalDateTime.of(2000, 7, 21, 0, 0),
-                    LocalDateTime.of(2016, 8, 12, 0, 0)),
+                    LocalDate.of(2000, 7, 21),
+                    LocalDate.of(2016, 8, 12)),
 
             new FootballPlayer.RegisterRequest("Sadio", "Mané",
-                    LocalDateTime.of(1992, 4, 10, 0, 0),
-                    LocalDateTime.of(2011, 1, 15, 0, 0)),
+                    LocalDate.of(1992, 4, 10),
+                    LocalDate.of(2011, 1, 15)),
 
             new FootballPlayer.RegisterRequest("Luka", "Modrić",
-                    LocalDateTime.of(1985, 9, 9, 0, 0),
-                    LocalDateTime.of(2003, 3, 1, 0, 0)),
+                    LocalDate.of(1985, 9, 9),
+                    LocalDate.of(2003, 3, 1)),
 
             new FootballPlayer.RegisterRequest("Toni", "Kroos",
-                    LocalDateTime.of(1990, 1, 4, 0, 0),
-                    LocalDateTime.of(2007, 9, 26, 0, 0)),
+                    LocalDate.of(1990, 1, 4),
+                    LocalDate.of(2007, 9, 26)),
 
             new FootballPlayer.RegisterRequest("Harry", "Kane",
-                    LocalDateTime.of(1993, 7, 28, 0, 0),
-                    LocalDateTime.of(2011, 8, 25, 0, 0)),
+                    LocalDate.of(1993, 7, 28),
+                    LocalDate.of(2011, 8, 25)),
 
             new FootballPlayer.RegisterRequest("Eden", "Hazard",
-                    LocalDateTime.of(1991, 1, 7, 0, 0),
-                    LocalDateTime.of(2007, 11, 24, 0, 0)),
+                    LocalDate.of(1991, 1, 7),
+                    LocalDate.of(2007, 11, 24)),
 
             new FootballPlayer.RegisterRequest("Karim", "Benzema",
-                    LocalDateTime.of(1987, 12, 19, 0, 0),
-                    LocalDateTime.of(2004, 1, 15, 0, 0))
+                    LocalDate.of(1987, 12, 19),
+                    LocalDate.of(2004, 1, 15))
     );
 
     private static final List<FootballTeam.RegisterRequest> teams = List.of(

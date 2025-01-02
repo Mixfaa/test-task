@@ -18,7 +18,7 @@ public class FootballPlayerController {
     private final FootballPlayerService footballPlayerService;
 
     @PostMapping("/")
-    public FootballPlayer insertPlayer(@Valid FootballPlayer.RegisterRequest registerRequest) throws Exception {
+    public FootballPlayer insertPlayer(@Valid @RequestBody FootballPlayer.RegisterRequest registerRequest) throws Exception {
         return footballPlayerService.save(registerRequest);
     }
 

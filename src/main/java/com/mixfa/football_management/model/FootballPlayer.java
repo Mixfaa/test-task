@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,16 +28,16 @@ public class FootballPlayer {
     private String lastname;
     @ManyToOne(optional = true)
     private FootballTeam currentTeam;
-    private LocalDateTime dateOfBirth;
-    private LocalDateTime careerBeginning;
+    private LocalDate dateOfBirth;
+    private LocalDate careerBeginning;
 
     public FootballPlayer(RegisterRequest registerRequest) {
         this(null, registerRequest.firstname, registerRequest.lastname, null, registerRequest.dateOfBirth, registerRequest.careerBeginning);
     }
 
     public record RegisterRequest(@NotBlank String firstname, @NotBlank String lastname,
-                                  @Past @NotNull LocalDateTime dateOfBirth,
-                                  @Past @NotNull LocalDateTime careerBeginning) {
+                                  @Past @NotNull LocalDate dateOfBirth,
+                                  @Past @NotNull LocalDate careerBeginning) {
     }
 
     public static final String FIRSTNAME_FIELD = "firstname";

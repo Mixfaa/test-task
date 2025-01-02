@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -19,10 +20,10 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     private final FootballPlayerRepo footballPlayerRepo;
 
     private void validatePlayerParams(
-            LocalDateTime dateOfBirth,
-            LocalDateTime careerBeginning
+            LocalDate dateOfBirth,
+            LocalDate careerBeginning
     ) throws Exception {
-        var currentTime = LocalDateTime.now();
+        var currentTime = LocalDate.now();
 
         if (dateOfBirth.isAfter(currentTime) || dateOfBirth.isEqual(currentTime))
             throw new ValidationException(FootballPlayerValidation.MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST);

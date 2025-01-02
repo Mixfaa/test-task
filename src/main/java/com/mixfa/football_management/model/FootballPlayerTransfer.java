@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -33,17 +33,17 @@ public class FootballPlayerTransfer {
     private double teamFromCommission;
     private double teamFromReward;
 
-    private LocalDateTime date;
+    private LocalDate date;
 
     public record RegisterRequest(
             long playerId,
             long teamToId,
-            LocalDateTime date
+            LocalDate date
     ) {
     }
 
     public static double calculatePlayerCost(FootballPlayer player) {
-        var currentDateTime = LocalDateTime.now();
+        var currentDateTime = LocalDate.now();
         var experienceDuration = Duration.between(player.getCareerBeginning(), currentDateTime);
         var ageDuration = Duration.between(player.getDateOfBirth(), currentDateTime);
 
