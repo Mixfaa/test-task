@@ -40,7 +40,7 @@ public class FootballPlayerTransfer {
             LocalDateTime date
     ) {
     }
- 
+
     public static double calculatePlayerCost(FootballPlayer player) {
         var currentDateTime = LocalDateTime.now();
         var experienceDuration = Duration.between(player.careerBeginning(), currentDateTime);
@@ -56,5 +56,12 @@ public class FootballPlayerTransfer {
         return (fromTeamCommission * playerPrice) / 100.0;
     }
 
+    public static final String TRANSFERRED_PLAYER_ID_FIELD = "transferred_player_id";
+    public static final String TEAM_FROM_ID_FIELD = "team_from_id";
+    public static final String TEAM_TO_ID_FIELD = "team_to_id";
+    public static final String PLAYER_PRICE_FIELD = "player_price";
+    public static final String TEAM_FROM_COMMISSION_FIELD = "team_from_commission";
+    public static final String TEAM_FROM_REWARD_FIELD = "team_from_reward";
+    public static final String DATE_FIELD = "date";
     public static final String TABLE_NAME = "football_player_transfer";
 }

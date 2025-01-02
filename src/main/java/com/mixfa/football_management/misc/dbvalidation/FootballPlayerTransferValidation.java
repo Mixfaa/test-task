@@ -2,6 +2,7 @@ package com.mixfa.football_management.misc.dbvalidation;
 
 import com.mixfa.football_management.misc.MySQLTrigger;
 import com.mixfa.football_management.misc.ValidationErrors;
+import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballPlayerTransfer;
 import org.springframework.stereotype.Component;
 
@@ -33,30 +34,30 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
                     DECLARE career_start DATETIME;
                    \s
                     -- Get player's career beginning date
-                    SELECT career_beginning INTO career_start
-                    FROM football_player
+                    SELECT \{FootballPlayer.CAREER_BEGINNING_FIELD} INTO career_start
+                    FROM \{FootballPlayer.TABLE_NAME}
                     WHERE id = NEW.id;
                    \s
                     -- Check if teams are different
-                    IF NEW.team_from_id = NEW.team_to_id THEN
+                    IF NEW.\{FootballPlayerTransfer.TEAM_FROM_ID_FIELD} = NEW.\{FootballPlayerTransfer.TEAM_TO_ID_FIELD} THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_SAME_TEAMS}';
                     END IF;
                    \s
                     -- Check from_team commission (between 0 and 10)
-                    IF NEW.team_from_commission < 0 OR NEW.team_from_commission > 10 THEN
+                    IF NEW.\{FootballPlayerTransfer.TEAM_FROM_COMMISSION_FIELD} < 0 OR NEW.\{FootballPlayerTransfer.TEAM_FROM_COMMISSION_FIELD} > 10 THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_FROM_TEAM_COMMISSION}';
                     END IF;
                    \s
                     -- Check from_team reward (>= 0)
-                    IF NEW.team_from_reward < 0 THEN
+                    IF NEW.\{FootballPlayerTransfer.TEAM_FROM_REWARD_FIELD} < 0 THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_FROM_TEAM_REWARD}';
                     END IF;
                    \s
                     -- Check if transfer date is after career beginning
-                    IF NEW.date <= career_start THEN
+                    IF NEW.\{FootballPlayerTransfer.DATE_FIELD} <= career_start THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_DATE_AFTER_CAREER_BEGINNING}';
                     END IF;

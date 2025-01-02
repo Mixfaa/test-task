@@ -41,5 +41,10 @@ public class FootballPlayer {
                                   @Past @NotNull LocalDateTime careerBeginning) {
     }
 
+    public static final String FIRSTNAME_FIELD = "firstname";
+    public static final String LASTNAME_FIELD = "lastname";
+    public static final String CURRENT_TEAM_ID_FIELD = "current_team_id";
+    public static final String DATE_OF_BIRTH_FIELD = "date_of_birth";
+    public static final String CAREER_BEGINNING_FIELD = "career_beginning";
     public static final String TABLE_NAME = "football_player";
 }

@@ -31,9 +31,9 @@ public class FootballTeam {
     @Column(length = 128)
     private String name;
 
-    @Check(name = FootballTeamValidation.ID_COMMISSION_BOUNDS, constraints = "transfer_commission_percent >= 0 AND transfer_commission_percent <= 10")
+    @Check(name = FootballTeamValidation.ID_COMMISSION_BOUNDS, constraints = TRANSFER_COMMISSION_FIELD + " >= 0 AND " + TRANSFER_COMMISSION_FIELD + " <= 10")
     private double transferCommissionPercent; // 0 - 10%
-    @Check(name = FootballTeamValidation.ID_BALANCE_BOUND, constraints = "balance >= 0")
+    @Check(name = FootballTeamValidation.ID_BALANCE_BOUND, constraints = BALANCE_FIELD + " >= 0")
     private double balance;
 
     @OneToMany
@@ -69,6 +69,8 @@ public class FootballTeam {
     ) {
     }
 
-
+    public static final String NAME_FIELD = "name";
+    public static final String TRANSFER_COMMISSION_FIELD = "transfer_commission_percent";
+    public static final String BALANCE_FIELD = "balance";
     public static final String TABLE_NAME = "football_team";
 }

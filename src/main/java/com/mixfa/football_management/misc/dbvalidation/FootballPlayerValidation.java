@@ -38,19 +38,19 @@ public class FootballPlayerValidation implements ValidationErrors {
                 FOR EACH ROW
                 BEGIN
                     -- Check if date of birth is in the past
-                    IF NEW.date_of_birth >= NOW() THEN
+                    IF NEW.\{FootballPlayer.DATE_OF_BIRTH_FIELD} >= NOW() THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST}';
                     END IF;
                 \s
                     -- Check if career beginning is in the past
-                    IF NEW.career_beginning >= NOW() THEN
+                    IF NEW.\{FootballPlayer.CAREER_BEGINNING_FIELD} >= NOW() THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_CAREER_BEGINNING_MUST_BE_IN_PAST}';
                     END IF;
                 \s
                     -- Check if career beginning is after birth date
-                    IF NEW.career_beginning <= NEW.date_of_birth THEN
+                    IF NEW.\{FootballPlayer.CAREER_BEGINNING_FIELD} <= NEW.\{FootballPlayer.DATE_OF_BIRTH_FIELD} THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE}';
                     END IF;
