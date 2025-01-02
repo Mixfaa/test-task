@@ -26,7 +26,6 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
         var method = insertOrUpdate ? "INSERT" : "UPDATE";
 
         return STR."""
-                -- Trigger for INSERT operations
                 CREATE TRIGGER \{triggerName}
                 BEFORE \{method} ON \{FootballPlayerTransfer.TABLE_NAME}
                 FOR EACH ROW
@@ -36,10 +35,10 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
                     -- Get player's career beginning date
                     SELECT career_beginning INTO career_start
                     FROM football_player
-                    WHERE id = NEW.player_id;
+                    WHERE id = NEW.id;
                    \s
                     -- Check if teams are different
-                    IF NEW.from_team_id = NEW.to_team_id THEN
+                    IF NEW.team_from_id = NEW.team_to_id THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_SAME_TEAMS}';
                     END IF;
@@ -51,13 +50,13 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
                     END IF;
                    \s
                     -- Check from_team reward (>= 0)
-                    IF NEW.from_team_reward < 0 THEN
+                    IF NEW.team_from_reward < 0 THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_FROM_TEAM_REWARD}';
                     END IF;
                    \s
                     -- Check if transfer date is after career beginning
-                    IF NEW.transfer_date <= career_start THEN
+                    IF NEW.date <= career_start THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_DATE_AFTER_CAREER_BEGINNING}';
                     END IF;
