@@ -65,7 +65,7 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
                 .teamFromReward(teamFromReward)
                 .date(registerRequest.date())
                 .build();
-        footballPlayerTransferValidation.preSaveValidate(transfer);
+        footballPlayerTransferValidation.onSaveValidate(transfer);
         transfer = footballPlayerTransferRepo.save(transfer);
         finalizeTransfer(transfer);
 

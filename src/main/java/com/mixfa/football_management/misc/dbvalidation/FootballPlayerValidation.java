@@ -2,7 +2,7 @@ package com.mixfa.football_management.misc.dbvalidation;
 
 import com.mixfa.football_management.exception.ValidationException;
 import com.mixfa.football_management.misc.MySQLTrigger;
-import com.mixfa.football_management.misc.ValidationErrors;
+import com.mixfa.football_management.misc.DbValidation;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.service.repo.FootballPlayerRepo;
 import com.mixfa.football_management.service.repo.FootballTeamRepo;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class FootballPlayerValidation implements ValidationErrors {
+public class FootballPlayerValidation implements DbValidation {
 
     public static final String ID_DATE_OF_BIRTH_MUST_BE_IN_PAST = "date_of_birth_must_be_in_past";
     public static final String MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST = "Date of birth must be in the past";
@@ -33,9 +33,9 @@ public class FootballPlayerValidation implements ValidationErrors {
     @Override
     public Map<String, String> errorIdToMessageMap() {
         return Map.of(
-                com.mixfa.football_management.misc.ValidationErrors.makeErrorId(FootballPlayer.TABLE_NAME, ID_DATE_OF_BIRTH_MUST_BE_IN_PAST), MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST,
-                com.mixfa.football_management.misc.ValidationErrors.makeErrorId(FootballPlayer.TABLE_NAME, ID_CAREER_BEGINNING_MUST_BE_IN_PAST), MSG_CAREER_BEGINNING_MUST_BE_IN_PAST,
-                com.mixfa.football_management.misc.ValidationErrors.makeErrorId(FootballPlayer.TABLE_NAME, ID_CAREER_BEGINNING_AFTER_BIRTH_DATE), MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE
+                DbValidation.makeErrorId(FootballPlayer.TABLE_NAME, ID_DATE_OF_BIRTH_MUST_BE_IN_PAST), MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST,
+                DbValidation.makeErrorId(FootballPlayer.TABLE_NAME, ID_CAREER_BEGINNING_MUST_BE_IN_PAST), MSG_CAREER_BEGINNING_MUST_BE_IN_PAST,
+                DbValidation.makeErrorId(FootballPlayer.TABLE_NAME, ID_CAREER_BEGINNING_AFTER_BIRTH_DATE), MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE
         );
     }
 

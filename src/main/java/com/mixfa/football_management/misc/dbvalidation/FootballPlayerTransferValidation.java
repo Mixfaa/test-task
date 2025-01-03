@@ -2,8 +2,8 @@ package com.mixfa.football_management.misc.dbvalidation;
 
 import com.mixfa.football_management.exception.PlayerTransferException;
 import com.mixfa.football_management.exception.ValidationException;
+import com.mixfa.football_management.misc.DbValidation;
 import com.mixfa.football_management.misc.MySQLTrigger;
-import com.mixfa.football_management.misc.ValidationErrors;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballPlayerTransfer;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class FootballPlayerTransferValidation implements ValidationErrors {
+public class FootballPlayerTransferValidation implements DbValidation {
     public static final String ID_SAME_TEAMS = "teams_must_be_different";
     public static final String MSG_SAME_TEAMS = "Teams must be different";
 
@@ -88,16 +88,16 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
     @Override
     public Map<String, String> errorIdToMessageMap() {
         return Map.of(
-                ValidationErrors.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_SAME_TEAMS), MSG_SAME_TEAMS,
-                ValidationErrors.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_FROM_TEAM_COMMISSION), MSG_FROM_TEAM_COMMISSION,
-                ValidationErrors.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_FROM_TEAM_REWARD), MSG_FROM_TEAM_REWARD,
-                ValidationErrors.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_DATE_AFTER_CAREER_BEGINNING), MSG_DATE_AFTER_CAREER_BEGINNING
+                DbValidation.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_SAME_TEAMS), MSG_SAME_TEAMS,
+                DbValidation.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_FROM_TEAM_COMMISSION), MSG_FROM_TEAM_COMMISSION,
+                DbValidation.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_FROM_TEAM_REWARD), MSG_FROM_TEAM_REWARD,
+                DbValidation.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_DATE_AFTER_CAREER_BEGINNING), MSG_DATE_AFTER_CAREER_BEGINNING
         );
     }
 
     private static final Exception transferDateEx = new ValidationException(MSG_DATE_AFTER_CAREER_BEGINNING);
 
-    public void preSaveValidate(FootballPlayerTransfer transfer) throws Exception {
+    public void onSaveValidate(FootballPlayerTransfer transfer) throws Exception {
         var currentDate = LocalDate.now();
         var player = transfer.getTransferredPlayer();
 

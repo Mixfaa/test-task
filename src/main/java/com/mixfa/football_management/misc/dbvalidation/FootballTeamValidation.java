@@ -2,7 +2,7 @@ package com.mixfa.football_management.misc.dbvalidation;
 
 import com.mixfa.football_management.exception.NotFoundException;
 import com.mixfa.football_management.exception.ValidationException;
-import com.mixfa.football_management.misc.ValidationErrors;
+import com.mixfa.football_management.misc.DbValidation;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
 import com.mixfa.football_management.service.repo.FootballPlayerRepo;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class FootballTeamValidation implements ValidationErrors {
+public class FootballTeamValidation implements DbValidation {
     public static final String ID_COMMISSION_BOUNDS = "commission_bounds";
     public static final String MSG_COMMISSION_BOUNDS = "Team commission must be >= 0 and <= 10";
 
@@ -28,8 +28,8 @@ public class FootballTeamValidation implements ValidationErrors {
     @Override
     public Map<String, String> errorIdToMessageMap() {
         return Map.of(
-                ValidationErrors.makeErrorId(FootballTeam.TABLE_NAME, ID_COMMISSION_BOUNDS), MSG_COMMISSION_BOUNDS,
-                ValidationErrors.makeErrorId(FootballTeam.TABLE_NAME, ID_BALANCE_BOUND), MSG_BALANCE_BOUND
+                DbValidation.makeErrorId(FootballTeam.TABLE_NAME, ID_COMMISSION_BOUNDS), MSG_COMMISSION_BOUNDS,
+                DbValidation.makeErrorId(FootballTeam.TABLE_NAME, ID_BALANCE_BOUND), MSG_BALANCE_BOUND
         );
     }
 
@@ -41,7 +41,7 @@ public class FootballTeamValidation implements ValidationErrors {
     private final FootballPlayerRepo footballPlayerRepo;
     private final FootballTeamRepo footballTeamRepo;
 
-    public void preSaveValidate(FootballTeam footballTeam) throws Exception {
+    public FootballTeam onSaveValidate(FootballTeam footballTeam) throws Exception {
         if (footballTeam.getBalance() < 0.0) throw balanceBoundsEx;
 
         if (footballTeam.getTransferCommissionPercent() < 0.0 ||
@@ -51,6 +51,7 @@ public class FootballTeamValidation implements ValidationErrors {
             if (!Objects.equals(player.getCurrentTeamId(), footballTeam.getId()))
                 throw teamHasForeignPlayer;
         }
+        return footballTeam;
     }
 
     public void preDeleteValidate(long teamId) throws Exception {

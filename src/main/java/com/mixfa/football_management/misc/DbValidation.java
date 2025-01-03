@@ -3,7 +3,10 @@ package com.mixfa.football_management.misc;
 import java.util.List;
 import java.util.Map;
 
-public interface ValidationErrors {
+/**
+ * Interface helps  triggers to maintain database integrity
+ */
+public interface DbValidation {
     Map<String, String> errorIdToMessageMap();
 
     default List<MySQLTrigger> triggers() {

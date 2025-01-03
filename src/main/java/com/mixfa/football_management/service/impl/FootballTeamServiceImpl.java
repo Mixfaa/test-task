@@ -53,8 +53,10 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         var players = findOrphanPlayersByIds(registerRequest.playerIds());
         var footballTeam = new FootballTeam(registerRequest);
         footballTeam.addPlayers(players);
-        footballTeamValidation.preSaveValidate(footballTeam);
-        return footballTeamRepo.save(footballTeam);
+        footballTeam = footballTeamRepo.save(footballTeam);
+
+        footballTeamValidation.onSaveValidate(footballTeam);
+        return footballTeam;
     }
 
     @Override
@@ -79,7 +81,8 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         var players = findOrphanPlayersByIds(updateRequest.playerIds(), id);
         var footballTeam = new FootballTeam(id, updateRequest.name(), updateRequest.transferCommission(), updateRequest.balance());
         footballTeam.addPlayers(players);
-        footballTeamValidation.preSaveValidate(footballTeam);
-        return footballTeamRepo.save(footballTeam);
+        footballTeam = footballTeamRepo.save(footballTeam);
+        footballTeamValidation.onSaveValidate(footballTeam);
+        return footballTeam;
     }
 }

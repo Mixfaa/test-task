@@ -12,7 +12,9 @@ public interface FootballPlayerService {
     FootballPlayer update(long id, FootballPlayer.UpdateRequest updateRequest) throws Exception;
 
     Optional<FootballPlayer> findById(long id);
+
     Optional<FootballPlayer> findOrphanOrIsIn(long id, long teamId);
+
     Optional<FootballPlayer> findOrphan(long id);
 
     Page<FootballPlayer> list(LimitedPageable pageable);
