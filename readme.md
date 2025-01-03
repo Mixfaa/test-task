@@ -21,4 +21,38 @@ made for creating/accessing exception objects, different implementations can cac
 such as MySQL Triggers and Checks
 
 # InitialDatabaseFiller
-### Fills database with initial football players and football teams 
+### Fills database with initial football players and football teams
+
+# Requests:
+### FootballPlayer
+### RegisterRequest
+* String firstname
+* String lastname
+* Date dateOfBirth
+* Date careerBeginning
+
+### UpdateRequest
+* String firstname
+* String lastname
+* Date dateOfBrith
+* Date careerBeginning
+* Long teamId
+
+### FootballTeam
+### RegisterRequest
+* String name
+* double transferCommission
+* double balance
+* Set<Long> playerIds
+
+### UpdateRequest
+* String name
+* double transferCommission
+* double balance
+* Set<Long> playerIds
+
+### FootballPlayerTransfer
+### RegisterRequest
+* long playerId
+* long teamId
+* Date date
