@@ -36,6 +36,11 @@ public class ControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleException(Exception exception) {
         log.error(exception.getLocalizedMessage());
+
+        var stackTrace = exception.getStackTrace();
+        if (stackTrace != null && stackTrace.length != 0)
+            exception.printStackTrace(System.err);
+
         var errorMessage = exception instanceof MyException noStackTraceException ?
                 noStackTraceException.getLocalizedMessage() : "Internal server error";
         HttpStatusCode httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
