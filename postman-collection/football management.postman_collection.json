@@ -1,0 +1,383 @@
+{
+	"info": {
+		"_postman_id": "ad4d5082-f2df-451d-bb27-6c7fa5b44a56",
+		"name": "football management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21632373"
+	},
+	"item": [
+		{
+			"name": "players",
+			"item": [
+				{
+					"name": "get players",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footballplayers/?page=0&pageSize=15",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayers",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get player by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footballplayers/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayers",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save player",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\": \"Mixfa\",\r\n    \"lastname\": \"Ezik\",\r\n    \"dateOfBirth\": \"2005-03-24\",\r\n    \"careerBeginning\": \"2010-03-24\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/footballplayers/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete player",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footballplayers/52",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayers",
+								"52"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update player",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n   \"firstname\": \"Cristiano\",\r\n    \"lastname\": \"Ronaldo\",\r\n    \"dateOfBirth\": \"1985-02-05\",\r\n    \"careerBeginning\": \"2002-08-14\",\r\n    \"teamId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/footballplayers/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayers",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Actions with players:  \n\n- get (pageable)\n    \n- get by id\n    \n- save\n    \n- delete\n    \n- update"
+		},
+		{
+			"name": "teams",
+			"item": [
+				{
+					"name": "get teams",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footbalteams/?page=0&pageSize=15",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footbalteams",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get team",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footbalteams/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footbalteams",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save team",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":  \"Team without name\",\r\n    \"transferCommission\": \"4\",\r\n    \"balance\": 10000,\r\n    \"playerIds\": [1,2,3]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/footbalteams/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footbalteams",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete team",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footbalteams/52",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footbalteams",
+								"52"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update team",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Team without name\",\r\n    \"transferCommissionPercent\": 4.0,\r\n    \"balance\": 10000.0,\r\n    \"playerIds\": [1,2]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/footbalteams/102",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footbalteams",
+								"102"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "actions with teams\n\n- get pageable\n    \n- get by id\n    \n- save\n    \n- delete by id\n    \n- update"
+		},
+		{
+			"name": "transfers",
+			"item": [
+				{
+					"name": "get transfers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footballplayertransfers/?page=0&pageSize=15",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayertransfers",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get transfer by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footballplayertransfers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayertransfers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make transfer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"playerId\": 10,\r\n    \"teamToId\": 2,\r\n    \"date\": \"2016-01-01\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/footballplayertransfers/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayertransfers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete transfer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/footballplayertransfers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"footballplayertransfers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Transfer actions\n\n- get pageable\n    \n- get by id\n    \n- make transfer\n    \n- delete transfer info (all edited data remains, only tranfer record is deleted)"
+		}
+	]
+}

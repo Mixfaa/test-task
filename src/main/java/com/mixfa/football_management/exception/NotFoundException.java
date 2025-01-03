@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
-public class NotFoundException extends MyException implements HasHttpStatusCode {
+public class NotFoundException extends CustomizableException implements HasHttpStatusCode {
     public NotFoundException(String entity, boolean writeStackTrace) {
         super("Entity (%s) not found".formatted(entity), writeStackTrace);
     }

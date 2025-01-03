@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
-public class PlayerTransferException extends MyException implements HasHttpStatusCode {
+public class PlayerTransferException extends CustomizableException implements HasHttpStatusCode {
     public PlayerTransferException(String message, boolean writeStacktrace) {
         super(message, writeStacktrace);
     }

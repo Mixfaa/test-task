@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
-public class ValidationException extends MyException implements HasHttpStatusCode {
+public class ValidationException extends CustomizableException implements HasHttpStatusCode {
     public ValidationException(String message, boolean writeStacktrace) {
         super(message, writeStacktrace);
     }

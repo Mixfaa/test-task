@@ -1,4 +1,4 @@
-package com.mixfa.football_management.exception;
+package com.mixfa.football_management.model;
 
 public record ErrorMessage(
         int httpStatus,

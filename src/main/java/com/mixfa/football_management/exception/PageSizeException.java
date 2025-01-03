@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
-public class PageSizeException extends MyException implements HasHttpStatusCode {
+public class PageSizeException extends CustomizableException implements HasHttpStatusCode {
     private final static String message = STR."Page size must be less than \{LimitedPageable.PAGE_SIZE_LIMIT}";
 
     public PageSizeException(boolean writeStacktrace) {
