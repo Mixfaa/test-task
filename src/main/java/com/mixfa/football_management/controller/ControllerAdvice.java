@@ -2,7 +2,7 @@ package com.mixfa.football_management.controller;
 
 import com.mixfa.football_management.exception.ErrorMessage;
 import com.mixfa.football_management.exception.HasHttpStatusCode;
-import com.mixfa.football_management.exception.NoStackTraceException;
+import com.mixfa.football_management.exception.MyException;
 import com.mixfa.football_management.misc.Utils;
 import com.mixfa.football_management.service.DBLayerValidation;
 import jakarta.validation.ConstraintViolation;
@@ -36,7 +36,7 @@ public class ControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleException(Exception exception) {
         log.error(exception.getLocalizedMessage());
-        var errorMessage = exception instanceof NoStackTraceException noStackTraceException ?
+        var errorMessage = exception instanceof MyException noStackTraceException ?
                 noStackTraceException.getLocalizedMessage() : "Internal server error";
         HttpStatusCode httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
 

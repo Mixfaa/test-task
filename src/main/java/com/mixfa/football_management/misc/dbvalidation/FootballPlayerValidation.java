@@ -1,10 +1,9 @@
 package com.mixfa.football_management.misc.dbvalidation;
 
 import com.mixfa.football_management.exception.ValidationException;
-import com.mixfa.football_management.misc.MySQLTrigger;
 import com.mixfa.football_management.misc.DbValidation;
+import com.mixfa.football_management.misc.MySQLTrigger;
 import com.mixfa.football_management.model.FootballPlayer;
-import com.mixfa.football_management.service.repo.FootballPlayerRepo;
 import com.mixfa.football_management.service.repo.FootballTeamRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -84,17 +83,7 @@ public class FootballPlayerValidation implements DbValidation {
         );
     }
 
-    private final FootballPlayerRepo footballPlayerRepo;
     private final FootballTeamRepo footballTeamRepo;
-
-    private static final Exception dateOfBirthInFutureEx = new ValidationException(MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST);
-    private static final Exception careerBeginningBeforeBirthEx = new ValidationException(MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE);
-    private static final Exception careerBeginningInFutureEx = new ValidationException(MSG_CAREER_BEGINNING_MUST_BE_IN_PAST);
-    private static final Exception playerTeamDoesNotHavePlayer = new ValidationException(
-            MSG_PLAYER_TEAM_DOES_NOT_HAVE_PLAYER
-    );
-    private static final Exception fewTeamsHasPlayer = new ValidationException(MSG_FEW_TEAM_HAS_SAME_PLAYER);
-    private static final Exception playerIsInTeam = new ValidationException(MSG_PLAYER_IS_IN_TEAM);
 
     private static void validatePlayerParams(
             LocalDate dateOfBirth,
@@ -103,14 +92,14 @@ public class FootballPlayerValidation implements DbValidation {
         var currentTime = LocalDate.now();
 
         if (dateOfBirth.isAfter(currentTime) || dateOfBirth.isEqual(currentTime))
-            throw dateOfBirthInFutureEx;
+            throw ValidationException.dateOfBirthInFuture();
 
         if (careerBeginning.isBefore(dateOfBirth) ||
                 careerBeginning.isEqual(dateOfBirth))
-            throw careerBeginningBeforeBirthEx;
+            throw ValidationException.careerBeginningBeforeBirth();
 
         if (careerBeginning.isAfter(currentTime) || careerBeginning.isEqual(currentTime))
-            throw careerBeginningInFutureEx;
+            throw ValidationException.careerBeginningInFuture();
     }
 
     public void onSaveValidate(FootballPlayer player) throws Exception {
@@ -119,9 +108,9 @@ public class FootballPlayerValidation implements DbValidation {
         if (currentTeam != null) {
             var teamsWithPlayer = footballTeamRepo.countAllByPlayersContains(player.getId());
             if (teamsWithPlayer == 0)
-                throw playerTeamDoesNotHavePlayer;
+                throw ValidationException.playerTeamDoesNotHavePlayer();
             if (teamsWithPlayer != 1)
-                throw fewTeamsHasPlayer;
+                throw ValidationException.fewTeamsHasPlayer();
         }
     }
 
@@ -129,6 +118,6 @@ public class FootballPlayerValidation implements DbValidation {
         // make sure player not in any team
         var teamsWithPlayer = footballTeamRepo.countAllByPlayersContains(id);
         if (teamsWithPlayer == 0) return;
-        throw playerIsInTeam;
+        throw ValidationException.playerIsInTeam();
     }
 }

@@ -95,14 +95,12 @@ public class FootballPlayerTransferValidation implements DbValidation {
         );
     }
 
-    private static final Exception transferDateEx = new ValidationException(MSG_DATE_AFTER_CAREER_BEGINNING);
-
     public void onSaveValidate(FootballPlayerTransfer transfer) throws Exception {
         var currentDate = LocalDate.now();
         var player = transfer.getTransferredPlayer();
 
         if (transfer.getDate().isBefore(player.getCareerBeginning()) || transfer.getDate().isAfter(currentDate))
-            throw transferDateEx;
+            throw ValidationException.transferDate();
 
         var playerTeamId = transfer.getTransferredPlayer().getCurrentTeamId();
         var teamTo = transfer.getTeamTo();

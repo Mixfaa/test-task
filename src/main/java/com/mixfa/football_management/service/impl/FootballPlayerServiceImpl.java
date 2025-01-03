@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FootballPlayerServiceImpl implements FootballPlayerService {
     private final FootballPlayerRepo footballPlayerRepo;
-    private final FootballTeamRepo footballTeamRepo;
+    private final FootballTeamRepo footballTeamRepo; // maybe, it isn`t that bad? :) Im able, of course, make proxy class, or split logic, but
     private final FootballPlayerValidation footballPlayerValidation;
 
     @Override

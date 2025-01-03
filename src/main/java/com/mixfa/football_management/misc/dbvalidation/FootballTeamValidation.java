@@ -5,7 +5,6 @@ import com.mixfa.football_management.exception.ValidationException;
 import com.mixfa.football_management.misc.DbValidation;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
-import com.mixfa.football_management.service.repo.FootballPlayerRepo;
 import com.mixfa.football_management.service.repo.FootballTeamRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,31 +32,24 @@ public class FootballTeamValidation implements DbValidation {
         );
     }
 
-    private static final Exception commissionBoundsEx = new ValidationException(MSG_COMMISSION_BOUNDS);
-    private static final Exception balanceBoundsEx = new ValidationException(MSG_BALANCE_BOUND);
-    private static final Exception teamHasForeignPlayer = new ValidationException(MSG_TEAM_HAS_FOREIGN_PLAYER);
-    private static final Exception teamStillHasPlayers = new ValidationException(MSG_TEAM_STILL_HAS_PLAYERS);
-
-    private final FootballPlayerRepo footballPlayerRepo;
     private final FootballTeamRepo footballTeamRepo;
 
-    public FootballTeam onSaveValidate(FootballTeam footballTeam) throws Exception {
-        if (footballTeam.getBalance() < 0.0) throw balanceBoundsEx;
+    public void onSaveValidate(FootballTeam footballTeam) throws Exception {
+        if (footballTeam.getBalance() < 0.0) throw ValidationException.balanceBounds();
 
         if (footballTeam.getTransferCommissionPercent() < 0.0 ||
-                footballTeam.getTransferCommissionPercent() > 10.0) throw commissionBoundsEx;
+                footballTeam.getTransferCommissionPercent() > 10.0) throw ValidationException.commissionBounds();
 
         for (FootballPlayer player : footballTeam.getPlayers()) {
             if (!Objects.equals(player.getCurrentTeamId(), footballTeam.getId()))
-                throw teamHasForeignPlayer;
+                throw ValidationException.teamHasForeignPlayer();
         }
-        return footballTeam;
     }
 
     public void preDeleteValidate(long teamId) throws Exception {
         // ensure team has no players
         var team = footballTeamRepo.findById(teamId).orElseThrow(() -> NotFoundException.teamNotFound(teamId));
         if (!team.getPlayers().isEmpty())
-            throw teamStillHasPlayers;
+            throw ValidationException.teamStillHasPlayers();
     }
 }
