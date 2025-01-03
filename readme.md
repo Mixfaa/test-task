@@ -6,6 +6,7 @@ https://www.postman.com/lively-flare-749086/my-workspace/collection/008kkas/foot
 to run:
 
 
+Unzip run.7z (jar file is too fat)
 * `cd run` 
 * `docker-compose up --build`
 
