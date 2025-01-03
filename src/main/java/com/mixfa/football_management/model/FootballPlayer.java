@@ -35,7 +35,7 @@ public class FootballPlayer {
     public FootballPlayer(RegisterRequest registerRequest) {
         this(null, registerRequest.firstname, registerRequest.lastname, null, registerRequest.dateOfBirth, registerRequest.careerBeginning);
     }
-
+    
     public Long getCurrentTeamId() {
         if (currentTeam == null) return null;
         return currentTeam.getId();

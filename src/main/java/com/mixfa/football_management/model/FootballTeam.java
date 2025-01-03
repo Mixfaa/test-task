@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,25 +46,37 @@ public class FootballTeam {
         this.players = new HashSet<>();
     }
 
-    public FootballTeam(RegisterRequest registerRequest) {
+    public FootballTeam(RegisterRequest registerRequest, Set<FootballPlayer> players) {
         this(
                 null,
                 registerRequest.name,
                 registerRequest.transferCommission,
                 registerRequest.balance,
-                new HashSet<>()
+                players
         );
     }
 
     public record RegisterRequest(
             @NotBlank(message = "Name must not be empty")
             String name,
-            @NotNull
             @Min(value = 0, message = "Transfer commission must be >= 0")
             @Max(value = 10, message = "Transfer commission must be <= 10")
             double transferCommission,
             @Min(value = 0, message = "Team balance must be >= 0")
-            double balance
+            double balance,
+            Set<Long> playerIds
+    ) {
+    }
+
+    public record UpdateRequest(
+            @NotBlank(message = "Name must not be empty")
+            String name,
+            @Min(value = 0, message = "Transfer commission must be >= 0")
+            @Max(value = 10, message = "Transfer commission must be <= 10")
+            double transferCommission,
+            @Min(value = 0, message = "Team balance must be >= 0")
+            double balance,
+            Set<Long> playerIds
     ) {
     }
 

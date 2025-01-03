@@ -11,27 +11,28 @@ public class PlayerTransferException extends NoStackTraceException implements Ha
     }
 
     public static PlayerTransferException orphanPlayer(FootballPlayer player) {
-        return new PlayerTransferException("The player (%s %s) is currently not in team"
-                .formatted(player.getFirstname(), player.getLastname()));
+        return new PlayerTransferException("The player (%s %s %d) is currently not in team"
+                .formatted(player.getFirstname(), player.getLastname(), player.getId()));
     }
 
-    public static PlayerTransferException playerAlreadyInTeam(FootballPlayer player, FootballTeam team) {
+    public static PlayerTransferException playerAlreadyInTeam(FootballPlayer player) {
         return new PlayerTransferException(
-                "The player (%s %s) is already in team %s".formatted(player.getFirstname(), player.getLastname(), team.getName())
+                "The player (%s %s %d) is already in team %s"
+                        .formatted(player.getFirstname(), player.getLastname(), player.getId(), player.getCurrentTeam().getName())
         );
     }
 
     public static PlayerTransferException sameTeams(FootballPlayer player, FootballTeam team) {
         return new PlayerTransferException(
-                "Can't transfer player (%s %s) from team %s to team %s"
-                        .formatted(player.getFirstname(), player.getLastname(), team.getName(), team.getName())
+                "Can't transfer player (%s %s %d) from team %s to team %s"
+                        .formatted(player.getFirstname(), player.getLastname(), player.getId(), team.getName(), team.getName())
         );
     }
 
     public static PlayerTransferException teamCantAffordPlayer(FootballPlayer player, FootballTeam team) {
         return new PlayerTransferException(
-                "Team %s can`t afford player (%s %s)"
-                        .formatted(team.getName(), player.getFirstname(), player.getLastname())
+                "Team %s can`t afford player (%s %s %d)"
+                        .formatted(team.getName(), player.getFirstname(), player.getLastname(), player.getId())
         );
     }
 

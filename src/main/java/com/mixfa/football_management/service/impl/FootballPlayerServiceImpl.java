@@ -1,6 +1,5 @@
 package com.mixfa.football_management.service.impl;
 
-import com.mixfa.football_management.exception.ValidationException;
 import com.mixfa.football_management.misc.LimitedPageable;
 import com.mixfa.football_management.misc.dbvalidation.FootballPlayerValidation;
 import com.mixfa.football_management.model.FootballPlayer;
@@ -10,44 +9,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class FootballPlayerServiceImpl implements FootballPlayerService {
     private final FootballPlayerRepo footballPlayerRepo;
-
-    private void validatePlayerParams(
-            LocalDate dateOfBirth,
-            LocalDate careerBeginning
-    ) throws Exception {
-        var currentTime = LocalDate.now();
-
-        if (dateOfBirth.isAfter(currentTime) || dateOfBirth.isEqual(currentTime))
-            throw new ValidationException(FootballPlayerValidation.MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST);
-
-        if (careerBeginning.isBefore(dateOfBirth) ||
-                careerBeginning.isEqual(dateOfBirth))
-            throw new ValidationException(FootballPlayerValidation.MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE);
-
-        if (careerBeginning.isAfter(currentTime) || careerBeginning.isEqual(currentTime))
-            throw new ValidationException(FootballPlayerValidation.MSG_CAREER_BEGINNING_MUST_BE_IN_PAST);
-    }
+    private final FootballPlayerValidation footballPlayerValidation;
 
     @Override
     public FootballPlayer save(FootballPlayer.RegisterRequest registerRequest) throws Exception {
-        validatePlayerParams(registerRequest.dateOfBirth(), registerRequest.careerBeginning());
-
         var footballPlayer = new FootballPlayer(registerRequest);
+        footballPlayerValidation.preSaveValidate(footballPlayer);
         return footballPlayerRepo.save(footballPlayer);
     }
 
     @Override
     public FootballPlayer update(long id, FootballPlayer footballPlayer) throws Exception {
-        validatePlayerParams(footballPlayer.getDateOfBirth(), footballPlayer.getCareerBeginning());
         footballPlayer.setId(id); // not thread safe?? use KOTLIN!!!
+        footballPlayerValidation.preSaveValidate(footballPlayer);
         return footballPlayerRepo.save(footballPlayer);
     }
 
@@ -62,7 +42,8 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(long id) throws Exception {
+        footballPlayerValidation.preDeleteValidate(id);
         footballPlayerRepo.deleteById(id);
     }
 }

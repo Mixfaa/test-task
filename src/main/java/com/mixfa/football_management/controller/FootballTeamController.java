@@ -40,7 +40,7 @@ public class FootballTeamController {
     }
 
     @PutMapping("/{id}")
-    public FootballTeam update(@PathVariable long id, @RequestBody FootballTeam team) throws Exception {
-        return footballTeamService.update(id, team);
+    public FootballTeam update(@PathVariable long id, @RequestBody @Valid FootballTeam.UpdateRequest updateRequest) throws Exception {
+        return footballTeamService.update(id, updateRequest);
     }
 }

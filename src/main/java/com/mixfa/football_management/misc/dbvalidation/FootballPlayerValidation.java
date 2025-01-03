@@ -1,14 +1,20 @@
 package com.mixfa.football_management.misc.dbvalidation;
 
+import com.mixfa.football_management.exception.ValidationException;
 import com.mixfa.football_management.misc.MySQLTrigger;
 import com.mixfa.football_management.misc.ValidationErrors;
 import com.mixfa.football_management.model.FootballPlayer;
+import com.mixfa.football_management.service.repo.FootballPlayerRepo;
+import com.mixfa.football_management.service.repo.FootballTeamRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class FootballPlayerValidation implements ValidationErrors {
 
     public static final String ID_DATE_OF_BIRTH_MUST_BE_IN_PAST = "date_of_birth_must_be_in_past";
@@ -19,6 +25,10 @@ public class FootballPlayerValidation implements ValidationErrors {
 
     public static final String ID_CAREER_BEGINNING_AFTER_BIRTH_DATE = "career_beginning_after_birth_date";
     public static final String MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE = "Career beginning must be after birth date";
+
+    public static final String MSG_PLAYER_TEAM_DOES_NOT_HAVE_PLAYER = "Player team does not have player in composition";
+    public static final String MSG_FEW_TEAM_HAS_SAME_PLAYER = "Few teams has player in composition";
+    public static final String MSG_PLAYER_IS_IN_TEAM = "Can`t delete player while he is in team";
 
     @Override
     public Map<String, String> errorIdToMessageMap() {
@@ -72,5 +82,53 @@ public class FootballPlayerValidation implements ValidationErrors {
                         makeTriggerCode(updateTriggerName, false)
                 )
         );
+    }
+
+    private final FootballPlayerRepo footballPlayerRepo;
+    private final FootballTeamRepo footballTeamRepo;
+
+    private static final Exception dateOfBirthInFutureEx = new ValidationException(MSG_DATE_OF_BIRTH_MUST_BE_IN_PAST);
+    private static final Exception careerBeginningBeforeBirthEx = new ValidationException(MSG_CAREER_BEGINNING_AFTER_BIRTH_DATE);
+    private static final Exception careerBeginningInFutureEx = new ValidationException(MSG_CAREER_BEGINNING_MUST_BE_IN_PAST);
+    private static final Exception playerTeamDoesNotHavePlayer = new ValidationException(
+            MSG_PLAYER_TEAM_DOES_NOT_HAVE_PLAYER
+    );
+    private static final Exception fewTeamsHasPlayer = new ValidationException(MSG_FEW_TEAM_HAS_SAME_PLAYER);
+    private static final Exception playerIsInTeam = new ValidationException(MSG_PLAYER_IS_IN_TEAM);
+
+    private static void validatePlayerParams(
+            LocalDate dateOfBirth,
+            LocalDate careerBeginning
+    ) throws Exception {
+        var currentTime = LocalDate.now();
+
+        if (dateOfBirth.isAfter(currentTime) || dateOfBirth.isEqual(currentTime))
+            throw dateOfBirthInFutureEx;
+
+        if (careerBeginning.isBefore(dateOfBirth) ||
+                careerBeginning.isEqual(dateOfBirth))
+            throw careerBeginningBeforeBirthEx;
+
+        if (careerBeginning.isAfter(currentTime) || careerBeginning.isEqual(currentTime))
+            throw careerBeginningInFutureEx;
+    }
+
+    public void preSaveValidate(FootballPlayer player) throws Exception {
+        validatePlayerParams(player.getDateOfBirth(), player.getCareerBeginning());
+        var currentTeamId = player.getCurrentTeamId();
+        if (currentTeamId != null) {
+            var teamsWithPlayer = footballTeamRepo.findAllByPlayersContains(player.getId());
+            if (teamsWithPlayer == 0)
+                throw playerTeamDoesNotHavePlayer;
+            if (teamsWithPlayer != 1)
+                throw fewTeamsHasPlayer;
+        }
+    }
+
+    public void preDeleteValidate(long id) throws Exception {
+        // make sure player not in any team
+        var teamsWithPlayer = footballTeamRepo.findAllByPlayersContains(id);
+        if (teamsWithPlayer == 0) return;
+        throw playerIsInTeam;
     }
 }

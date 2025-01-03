@@ -1,9 +1,11 @@
 package com.mixfa.football_management.misc.dbvalidation;
 
+import com.mixfa.football_management.exception.PlayerTransferException;
 import com.mixfa.football_management.misc.MySQLTrigger;
 import com.mixfa.football_management.misc.ValidationErrors;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballPlayerTransfer;
+import com.mixfa.football_management.model.FootballTeam;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -90,5 +92,29 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
                 ValidationErrors.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_FROM_TEAM_REWARD), MSG_FROM_TEAM_REWARD,
                 ValidationErrors.makeErrorId(FootballPlayerTransfer.TABLE_NAME, ID_DATE_AFTER_CAREER_BEGINNING), MSG_DATE_AFTER_CAREER_BEGINNING
         );
+    }
+
+    public void preSaveValidate(FootballPlayerTransfer transfer) throws Exception {
+        var player = transfer.getTransferredPlayer();
+        var playerTeamId = transfer.getTransferredPlayer().getCurrentTeamId();
+        var teamTo = transfer.getTeamTo();
+        var teamFrom = transfer.getTeamFrom();
+        var playerPrice = transfer.getPlayerPrice();
+        var teamFromReward = transfer.getTeamFromReward();
+
+        if (playerTeamId.equals(teamTo.getId()))
+            throw PlayerTransferException.playerAlreadyInTeam(player);
+
+        if (teamFrom.getId().equals(teamTo.getId()))
+            throw PlayerTransferException.sameTeams(player, teamFrom);
+        var totalTransferPrice = playerPrice + teamFromReward;
+
+        var buyerTeamBalance = teamTo.getBalance();
+        if (buyerTeamBalance < totalTransferPrice)
+            throw PlayerTransferException.teamCantAffordPlayer(player, teamTo);
+    }
+
+    public void preDeleteValidate(long teamId) throws Exception {
+
     }
 }

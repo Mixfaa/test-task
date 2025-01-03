@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -87,10 +84,10 @@ public class InitialDatabaseFiller implements CommandLineRunner {
     );
 
     private static final List<FootballTeam.RegisterRequest> teams = List.of(
-            new FootballTeam.RegisterRequest("Barcelona IDC", 10.0, 25_000_000_000.0),
-            new FootballTeam.RegisterRequest("Madrid Maybe", 5.0, 15_000_000_000.0),
-            new FootballTeam.RegisterRequest("Kharkiv junkies", 3.0, 30_000_000_000.0),
-            new FootballTeam.RegisterRequest("Lviv intelligence", 10.0, 10_000_000_000.0)
+            new FootballTeam.RegisterRequest("Barcelona IDC", 10.0, 25_000_000_000.0, Set.of()),
+            new FootballTeam.RegisterRequest("Madrid Maybe", 5.0, 15_000_000_000.0, Set.of()),
+            new FootballTeam.RegisterRequest("Kharkiv junkies", 3.0, 30_000_000_000.0, Set.of()),
+            new FootballTeam.RegisterRequest("Lviv intelligence", 10.0, 10_000_000_000.0, Set.of())
     );
 
     private static final Random random = new Random();

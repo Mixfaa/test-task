@@ -31,4 +31,9 @@ public class Utils {
     public static Iterable<Throwable> iterateCauses(Exception ex) {
         return () -> causesToIterator(ex);
     }
+
+    public static Exception unwrapRuntimeException(RuntimeException runtimeException) {
+        if (runtimeException.getCause() instanceof Exception e) return e;
+        return runtimeException;
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.sql.SQLException;
 import java.util.stream.Collectors;
@@ -24,6 +25,14 @@ import java.util.stream.Collectors;
 public class ControllerAdvice {
     private final DBLayerValidation dbLayerValidation;
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorMessage> onNoResourceFound(NoResourceFoundException noResourceFoundException) {
+        return new ResponseEntity<>(
+                new ErrorMessage(HttpStatus.NOT_FOUND.value(), "Resource not found"),
+                HttpStatus.NOT_FOUND
+        );
+    }
+ 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleException(Exception exception) {
         log.error(exception.getLocalizedMessage());
@@ -40,10 +49,12 @@ public class ControllerAdvice {
                 }
                 case ConstraintViolationException violationException -> {
                     errorMessage = dbLayerValidation.getErrorMessage(violationException.getConstraintName());
+                    httpStatusCode = HttpStatus.BAD_REQUEST;
                     shouldBreak = true;
                 }
                 case SQLException sqlException -> {
                     errorMessage = dbLayerValidation.getErrorMessage(sqlException.getLocalizedMessage());
+                    httpStatusCode = HttpStatus.BAD_REQUEST;
                     shouldBreak = true;
                 }
                 case jakarta.validation.ConstraintViolationException constraintViolationException -> {
@@ -51,6 +62,7 @@ public class ControllerAdvice {
                             .stream()
                             .map(ConstraintViolation::getMessage)
                             .collect(Collectors.joining("\n"));
+                    httpStatusCode = HttpStatus.BAD_REQUEST;
                     shouldBreak = true;
                 }
                 default -> {
