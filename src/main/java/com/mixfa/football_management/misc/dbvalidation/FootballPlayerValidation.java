@@ -113,11 +113,11 @@ public class FootballPlayerValidation implements ValidationErrors {
             throw careerBeginningInFutureEx;
     }
 
-    public void preSaveValidate(FootballPlayer player) throws Exception {
+    public void onSaveValidate(FootballPlayer player) throws Exception {
         validatePlayerParams(player.getDateOfBirth(), player.getCareerBeginning());
-        var currentTeamId = player.getCurrentTeamId();
-        if (currentTeamId != null) {
-            var teamsWithPlayer = footballTeamRepo.findAllByPlayersContains(player.getId());
+        var currentTeam = player.getCurrentTeam();
+        if (currentTeam != null) {
+            var teamsWithPlayer = footballTeamRepo.countAllByPlayersContains(player.getId());
             if (teamsWithPlayer == 0)
                 throw playerTeamDoesNotHavePlayer;
             if (teamsWithPlayer != 1)
@@ -127,7 +127,7 @@ public class FootballPlayerValidation implements ValidationErrors {
 
     public void preDeleteValidate(long id) throws Exception {
         // make sure player not in any team
-        var teamsWithPlayer = footballTeamRepo.findAllByPlayersContains(id);
+        var teamsWithPlayer = footballTeamRepo.countAllByPlayersContains(id);
         if (teamsWithPlayer == 0) return;
         throw playerIsInTeam;
     }

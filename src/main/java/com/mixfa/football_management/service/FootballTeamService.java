@@ -16,6 +16,4 @@ public interface FootballTeamService {
     void deleteById(long id) throws Exception;
 
     FootballTeam update(long id, FootballTeam.UpdateRequest updateRequest) throws Exception;
-
-    FootballTeam update(long id, FootballTeam team) throws Exception;
 }

@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface FootballTeamRepo extends JpaRepository<FootballTeam, Long> {
-    boolean existsByIdAndPlayersIsEmpty(long id);
+//    long countAllByPlayersContains(FootballPlayer player);
 
-    @Query("SELECT COUNT(DISTINCT t) FROM FootballTeam t JOIN t.players p WHERE p.id = :playerId")
-    long findAllByPlayersContains(long playerId);
+    @Query(
+            "select count(*) from FootballTeam team join FootballPlayer fp on team.id = fp.currentTeam.id and fp.id = :playerId"
+    )
+    long countAllByPlayersContains(long playerId);
 }

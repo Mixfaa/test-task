@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
+import java.util.Calendar;
 
 @Entity
 @Getter
@@ -43,12 +46,10 @@ public class FootballPlayerTransfer {
     }
 
     public static double calculatePlayerCost(FootballPlayer player) {
-        var currentDateTime = LocalDate.now();
-        var experienceDuration = Duration.between(player.getCareerBeginning(), currentDateTime);
-        var ageDuration = Duration.between(player.getDateOfBirth(), currentDateTime);
+        var currentDate = LocalDate.now();
 
-        var expInMonth = experienceDuration.toDays() / 30.0;
-        var ageInYears = ageDuration.toDays() / 365.0;
+        var expInMonth = ChronoUnit.MONTHS.between(player.getCareerBeginning(), currentDate);
+        var ageInYears = ChronoUnit.DAYS.between(player.getDateOfBirth(), currentDate);
 
         return (expInMonth * 100000.0) / ageInYears;
     }

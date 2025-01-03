@@ -1,13 +1,14 @@
 package com.mixfa.football_management.misc.dbvalidation;
 
 import com.mixfa.football_management.exception.PlayerTransferException;
+import com.mixfa.football_management.exception.ValidationException;
 import com.mixfa.football_management.misc.MySQLTrigger;
 import com.mixfa.football_management.misc.ValidationErrors;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballPlayerTransfer;
-import com.mixfa.football_management.model.FootballTeam;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
     public static final String MSG_FROM_TEAM_REWARD = "Team reward must be >= 0";
 
     public static final String ID_DATE_AFTER_CAREER_BEGINNING = "date_after_career";
-    public static final String MSG_DATE_AFTER_CAREER_BEGINNING = "Transfer date must be after player career beginning";
+    public static final String MSG_DATE_AFTER_CAREER_BEGINNING = "Transfer date must be after player career beginning and in the past";
 
     private static String makeTriggerCode(String triggerName, boolean insertOrUpdate) {
         var method = insertOrUpdate ? "INSERT" : "UPDATE";
@@ -59,7 +60,7 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
                     END IF;
                    \s
                     -- Check if transfer date is after career beginning
-                    IF NEW.\{FootballPlayerTransfer.DATE_FIELD} <= career_start THEN
+                    IF NEW.\{FootballPlayerTransfer.DATE_FIELD} <= career_start OR NEW.\{FootballPlayerTransfer.DATE_FIELD} >= NOW() THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_DATE_AFTER_CAREER_BEGINNING}';
                     END IF;
@@ -94,8 +95,15 @@ public class FootballPlayerTransferValidation implements ValidationErrors {
         );
     }
 
+    private static final Exception transferDateEx = new ValidationException(MSG_DATE_AFTER_CAREER_BEGINNING);
+
     public void preSaveValidate(FootballPlayerTransfer transfer) throws Exception {
+        var currentDate = LocalDate.now();
         var player = transfer.getTransferredPlayer();
+
+        if (transfer.getDate().isBefore(player.getCareerBeginning()) || transfer.getDate().isAfter(currentDate))
+            throw transferDateEx;
+
         var playerTeamId = transfer.getTransferredPlayer().getCurrentTeamId();
         var teamTo = transfer.getTeamTo();
         var teamFrom = transfer.getTeamFrom();

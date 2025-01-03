@@ -12,6 +12,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -32,11 +33,10 @@ public class ControllerAdvice {
                 HttpStatus.NOT_FOUND
         );
     }
- 
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleException(Exception exception) {
         log.error(exception.getLocalizedMessage());
-        exception.printStackTrace(System.err);
         var errorMessage = exception instanceof NoStackTraceException noStackTraceException ?
                 noStackTraceException.getLocalizedMessage() : "Internal server error";
         HttpStatusCode httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -53,7 +53,7 @@ public class ControllerAdvice {
                     shouldBreak = true;
                 }
                 case SQLException sqlException -> {
-                    errorMessage = dbLayerValidation.getErrorMessage(sqlException.getLocalizedMessage());
+                    errorMessage = sqlException.getLocalizedMessage();
                     httpStatusCode = HttpStatus.BAD_REQUEST;
                     shouldBreak = true;
                 }

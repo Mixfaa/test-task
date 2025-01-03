@@ -9,9 +9,11 @@ import java.util.Optional;
 public interface FootballPlayerService {
     FootballPlayer save(FootballPlayer.RegisterRequest registerRequest) throws Exception;
 
-    FootballPlayer update(long id, FootballPlayer footballPlayer) throws Exception;
+    FootballPlayer update(long id, FootballPlayer.UpdateRequest updateRequest) throws Exception;
 
     Optional<FootballPlayer> findById(long id);
+    Optional<FootballPlayer> findOrphanOrIsIn(long id, long teamId);
+    Optional<FootballPlayer> findOrphan(long id);
 
     Page<FootballPlayer> list(LimitedPageable pageable);
 

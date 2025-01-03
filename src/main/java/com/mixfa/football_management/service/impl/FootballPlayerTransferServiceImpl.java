@@ -38,7 +38,6 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
         teamTo.setBalance(teamToBalance);
 
         moveToTeamNoTx(transfer.getTransferredPlayer(), teamTo);
-        footballTeamService.update(teamFrom.getId(), teamFrom);
     }
 
     @Override
@@ -90,10 +89,8 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
     }
 
     private void moveToTeamNoTx(FootballPlayer player, FootballTeam team) throws Exception {
-        team.getPlayers().add(player);
-        team = footballTeamService.update(team.getId(), team);
-        player.setCurrentTeam(team);
-        footballPlayerService.update(player.getId(), player);
+        team.addPlayer(player);
+        footballTeamService.update(team.getId(), new FootballTeam.UpdateRequest(team));
     }
 
     @Override

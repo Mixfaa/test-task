@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Check;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -34,7 +36,7 @@ public class FootballTeam {
     @Check(name = FootballTeamValidation.ID_BALANCE_BOUND, constraints = BALANCE_FIELD + " >= 0")
     private double balance;
 
-    @OneToMany
+    @OneToMany(mappedBy = "currentTeam")
     @JsonManagedReference
     private Set<FootballPlayer> players;
 
@@ -46,14 +48,36 @@ public class FootballTeam {
         this.players = new HashSet<>();
     }
 
-    public FootballTeam(RegisterRequest registerRequest, Set<FootballPlayer> players) {
+    public FootballTeam(long id, String name, double commission, double balance) {
+        this.id = id;
+        this.name = name;
+        this.transferCommissionPercent = commission;
+        this.balance = balance;
+        this.players = new HashSet<>();
+    }
+
+    public FootballTeam(RegisterRequest registerRequest) {
         this(
                 null,
                 registerRequest.name,
                 registerRequest.transferCommission,
                 registerRequest.balance,
-                players
+                new HashSet<>()
         );
+    }
+
+    public void addPlayer(FootballPlayer player) {
+        players.add(player);
+        player.setCurrentTeam(this);
+    }
+
+    public void addPlayers(Collection<FootballPlayer> players) {
+        players.forEach(this::addPlayer);
+    }
+
+    public void removePlayer(FootballPlayer player) {
+        players.remove(player);
+        player.setCurrentTeam(null);
     }
 
     public record RegisterRequest(
@@ -78,6 +102,9 @@ public class FootballTeam {
             double balance,
             Set<Long> playerIds
     ) {
+        public UpdateRequest(FootballTeam team) {
+            this(team.name, team.transferCommissionPercent, team.balance, team.players.stream().map(FootballPlayer::getId).collect(Collectors.toSet()));
+        }
     }
 
     public static final String NAME_FIELD = "name";
