@@ -5,10 +5,10 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the Spring Boot application JAR file into the container
-COPY ../target/football-management-0.0.1-SNAPSHOT.jar app.jar
+COPY /football-management-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port your application will run on (e.g., 8080)
 EXPOSE 8080
 
 # Command to run the JAR file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "--enable-preview", "-jar", "app.jar"]
