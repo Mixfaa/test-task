@@ -31,9 +31,11 @@ public class FootballTeamServiceImpl implements FootballTeamService {
             return playerIds == null ? Set.of() : playerIds.stream().map(id -> {
                 try {
                     if (teamId == null)
-                        return footballPlayerService.findOrphan(id).orElseThrow(() -> NotFoundException.playerNotFound(id));
+                        return footballPlayerService.findOrphan(id)
+                                .orElseThrow(() -> NotFoundException.playerNotFound(id));
                     else
-                        return footballPlayerService.findOrphanOrIsIn(id, teamId).orElseThrow(() -> NotFoundException.playerNotFound(id));
+                        return footballPlayerService.findOrphanOrIsIn(id, teamId)
+                                .orElseThrow(() -> NotFoundException.playerNotFound(id));
                 } catch (NotFoundException e) {
                     throw new RuntimeException(e);
                 }

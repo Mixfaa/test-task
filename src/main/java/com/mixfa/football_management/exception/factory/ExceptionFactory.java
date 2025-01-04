@@ -8,8 +8,8 @@ import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
 
 /**
- * Expected to have 2 implementations -> FastExceptionsFactory with cache exceptions, create them with no stacktrace
- * And DebugExceptionsFactory -> will create new exceptions with stack trace
+ * Expected to have 2 implementations -> FastExceptionsFactory with cache exceptions, create them without stacktrace
+ * And DebugExceptionsFactory -> will create new exceptions with stacktrace
  */
 public interface ExceptionFactory {
     NotFoundException playerNotFound(long id);

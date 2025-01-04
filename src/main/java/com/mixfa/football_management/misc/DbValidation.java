@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Interface helps  triggers to maintain database integrity
+ * Interface helps setup triggers to maintain database integrity
  */
 public interface DbValidation {
     Map<String, String> errorIdToMessageMap();

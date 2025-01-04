@@ -1,9 +1,9 @@
 package com.mixfa.football_management.controller;
 
-import com.mixfa.football_management.model.ErrorMessage;
-import com.mixfa.football_management.exception.HasHttpStatusCode;
 import com.mixfa.football_management.exception.CustomizableException;
+import com.mixfa.football_management.exception.HasHttpStatusCode;
 import com.mixfa.football_management.misc.Utils;
+import com.mixfa.football_management.model.ErrorMessage;
 import com.mixfa.football_management.service.DBLayerValidation;
 import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +25,14 @@ import java.util.stream.Collectors;
 public class ControllerAdvice {
     private final DBLayerValidation dbLayerValidation;
 
+    private final static ResponseEntity<ErrorMessage> noResourceFoundResponse = new ResponseEntity<>(
+            new ErrorMessage(HttpStatus.NOT_FOUND.value(), "Resource not found"),
+            HttpStatus.NOT_FOUND
+    );
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorMessage> onNoResourceFound(NoResourceFoundException noResourceFoundException) {
-        return new ResponseEntity<>(
-                new ErrorMessage(HttpStatus.NOT_FOUND.value(), "Resource not found"),
-                HttpStatus.NOT_FOUND
-        );
+        return noResourceFoundResponse;
     }
 
     @ExceptionHandler(Exception.class)

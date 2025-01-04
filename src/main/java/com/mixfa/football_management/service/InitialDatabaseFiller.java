@@ -2,8 +2,6 @@ package com.mixfa.football_management.service;
 
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
-import com.mixfa.football_management.service.repo.FootballPlayerRepo;
-import com.mixfa.football_management.service.repo.FootballTeamRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +12,9 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Fills database with initial data, only if file "dbinit" not exists, creates file after first fill
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -21,8 +22,6 @@ public class InitialDatabaseFiller implements CommandLineRunner {
     private final FootballPlayerService footballPlayerService;
     private final FootballTeamService footballTeamService;
     private final FootballPlayerTransferService footballPlayerTransferService;
-    private final FootballPlayerRepo footballPlayerRepo;
-    private final FootballTeamRepo footballTeamRepo;
 
     private static final List<FootballPlayer.RegisterRequest> players = List.of(
             new FootballPlayer.RegisterRequest("Lionel", "Messi",
@@ -98,7 +97,7 @@ public class InitialDatabaseFiller implements CommandLineRunner {
     private static <T> T takeRandom(List<T> list) {
         return list.get(random.nextInt(list.size()));
     }
-  
+
     @Override
     @Transactional
     public void run(String... args) throws Exception {
