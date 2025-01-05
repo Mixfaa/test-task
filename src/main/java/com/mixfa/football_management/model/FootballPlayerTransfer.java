@@ -6,11 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
-import java.util.Calendar;
 
 @Entity
 @Getter
@@ -24,13 +21,16 @@ public class FootballPlayerTransfer {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    private FootballPlayer transferredPlayer;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "player_record_id", nullable = false)
+    private FootballPlayerRecord playerRecord;
 
-    @ManyToOne
-    private FootballTeam teamFrom;
-    @ManyToOne
-    private FootballTeam teamTo;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "team_from_record_id", nullable = false)
+    private FootballTeamRecord teamFromRecord;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "team_to_record_id", nullable = false)
+    private FootballTeamRecord teamToRecord;
 
     private double playerPrice;
     private double teamFromCommission;
@@ -58,9 +58,9 @@ public class FootballPlayerTransfer {
         return (fromTeamCommission * playerPrice) / 100.0;
     }
 
-    public static final String TRANSFERRED_PLAYER_ID_FIELD = "transferred_player_id";
-    public static final String TEAM_FROM_ID_FIELD = "team_from_id";
-    public static final String TEAM_TO_ID_FIELD = "team_to_id";
+    public static final String PLAYER_RECORD_ID_FIELD = "player_record_id";
+    public static final String TEAM_FROM_RECORD_ID_FIELD = "team_from_record_id";
+    public static final String TEAM_TO_RECORD_ID_FIELD = "team_to_record_id";
     public static final String PLAYER_PRICE_FIELD = "player_price";
     public static final String TEAM_FROM_COMMISSION_FIELD = "team_from_commission";
     public static final String TEAM_FROM_REWARD_FIELD = "team_from_reward";

@@ -5,7 +5,9 @@ import com.mixfa.football_management.exception.ValidationException;
 import com.mixfa.football_management.misc.DbValidation;
 import com.mixfa.football_management.misc.MySQLTrigger;
 import com.mixfa.football_management.model.FootballPlayer;
+import com.mixfa.football_management.model.FootballPlayerRecord;
 import com.mixfa.football_management.model.FootballPlayerTransfer;
+import com.mixfa.football_management.model.FootballTeamRecord;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -35,14 +37,24 @@ public class FootballPlayerTransferValidation implements DbValidation {
                 FOR EACH ROW
                 BEGIN
                     DECLARE career_start DATETIME;
+                    DECLARE team_from_id BIGINT;
+                    DECLARE team_to_id BIGINT;
                    \s
                     -- Get player's career beginning date
                     SELECT \{FootballPlayer.CAREER_BEGINNING_FIELD} INTO career_start
-                    FROM \{FootballPlayer.TABLE_NAME}
-                    WHERE id = NEW.id;
+                    FROM \{FootballPlayerRecord.TABLE_NAME}
+                    WHERE \{FootballPlayerRecord.RECORD_ID_FIELD} = NEW.\{FootballPlayerTransfer.PLAYER_RECORD_ID_FIELD};
                    \s
                     -- Check if teams are different
-                    IF NEW.\{FootballPlayerTransfer.TEAM_FROM_ID_FIELD} = NEW.\{FootballPlayerTransfer.TEAM_TO_ID_FIELD} THEN
+                    SELECT \{FootballTeamRecord.TEAM_ID_FIELD} INTO team_from_id
+                    FROM \{FootballTeamRecord.TABLE_NAME}
+                    WHERE \{FootballTeamRecord.RECORD_ID_FIElD} = NEW.\{FootballPlayerTransfer.TEAM_FROM_RECORD_ID_FIELD};
+                    \s
+                    SELECT \{FootballTeamRecord.TEAM_ID_FIELD} INTO team_to_id
+                    FROM \{FootballTeamRecord.TABLE_NAME}
+                    WHERE \{FootballTeamRecord.RECORD_ID_FIElD} = NEW.\{FootballPlayerTransfer.TEAM_TO_RECORD_ID_FIELD};
+                    \s
+                    IF team_from_id = team_to_id THEN
                         SIGNAL SQLSTATE '45000'
                         SET MESSAGE_TEXT = '\{MSG_SAME_TEAMS}';
                     END IF;
@@ -97,14 +109,14 @@ public class FootballPlayerTransferValidation implements DbValidation {
 
     public void onSaveValidate(FootballPlayerTransfer transfer) throws Exception {
         var currentDate = LocalDate.now();
-        var player = transfer.getTransferredPlayer();
+        var player = transfer.getPlayerRecord().getTransferredPlayer();
 
         if (transfer.getDate().isBefore(player.getCareerBeginning()) || transfer.getDate().isAfter(currentDate))
             throw ValidationException.transferDate();
 
-        var playerTeamId = transfer.getTransferredPlayer().getCurrentTeamId();
-        var teamTo = transfer.getTeamTo();
-        var teamFrom = transfer.getTeamFrom();
+        var playerTeamId = transfer.getPlayerRecord().getTransferredPlayer().getCurrentTeamId();
+        var teamTo = transfer.getTeamToRecord().getTeam();
+        var teamFrom = transfer.getTeamFromRecord().getTeam();
         var playerPrice = transfer.getPlayerPrice();
         var teamFromReward = transfer.getTeamFromReward();
 

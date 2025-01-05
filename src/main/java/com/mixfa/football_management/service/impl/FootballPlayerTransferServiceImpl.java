@@ -4,18 +4,19 @@ import com.mixfa.football_management.exception.NotFoundException;
 import com.mixfa.football_management.exception.PlayerTransferException;
 import com.mixfa.football_management.misc.LimitedPageable;
 import com.mixfa.football_management.misc.dbvalidation.FootballPlayerTransferValidation;
-import com.mixfa.football_management.model.FootballPlayer;
-import com.mixfa.football_management.model.FootballPlayerTransfer;
-import com.mixfa.football_management.model.FootballTeam;
+import com.mixfa.football_management.model.*;
 import com.mixfa.football_management.service.FootballPlayerService;
 import com.mixfa.football_management.service.FootballPlayerTransferService;
 import com.mixfa.football_management.service.FootballTeamService;
+import com.mixfa.football_management.service.repo.FootballPlayerRecordRepo;
 import com.mixfa.football_management.service.repo.FootballPlayerTransferRepo;
+import com.mixfa.football_management.service.repo.FootballTeamRecordRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,11 +26,13 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
     private final FootballPlayerService footballPlayerService;
     private final FootballTeamService footballTeamService;
 
+    private final FootballPlayerRecordRepo playerRecordRepo;
+    private final FootballTeamRecordRepo teamRecordRepo;
     private final FootballPlayerTransferValidation footballPlayerTransferValidation;
 
     private void finalizeTransfer(FootballPlayerTransfer transfer) throws Exception {
-        var teamFrom = transfer.getTeamFrom();
-        var teamTo = transfer.getTeamTo();
+        var teamFrom = transfer.getTeamFromRecord();
+        var teamTo = transfer.getTeamToRecord();
 
         var teamFromBalance = teamFrom.getBalance() + transfer.getTeamFromReward();
         var teamToBalance = teamTo.getBalance() - (transfer.getPlayerPrice() + transfer.getTeamFromReward());
@@ -37,7 +40,9 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
         teamFrom.setBalance(teamFromBalance);
         teamTo.setBalance(teamToBalance);
 
-        moveToTeamNoTx(transfer.getTransferredPlayer(), teamTo);
+        Objects.requireNonNull(transfer.getPlayerRecord().getTransferredPlayer());
+        Objects.requireNonNull(teamTo.getTeam());
+        moveToTeamNoTx(transfer.getPlayerRecord().getTransferredPlayer(), teamTo.getTeam());
     }
 
     @Override
@@ -57,9 +62,15 @@ public class FootballPlayerTransferServiceImpl implements FootballPlayerTransfer
         var teamFromReward = FootballPlayerTransfer.calculateFromTeamReward(playerPrice, teamFrom.getTransferCommissionPercent());
 
         var transfer = FootballPlayerTransfer.builder()
-                .transferredPlayer(player)
-                .teamFrom(teamFrom)
-                .teamTo(teamTo)
+                .playerRecord(
+                        playerRecordRepo.save(new FootballPlayerRecord(player))
+                )
+                .teamFromRecord(
+                        teamRecordRepo.save(new FootballTeamRecord(teamFrom))
+                )
+                .teamToRecord(
+                        teamRecordRepo.save(new FootballTeamRecord(teamTo))
+                )
                 .playerPrice(playerPrice)
                 .teamFromCommission(teamFrom.getTransferCommissionPercent())
                 .teamFromReward(teamFromReward)
