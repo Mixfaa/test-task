@@ -1,3 +1,6 @@
+After deadline branch contains fix for delete player/team if transfer exists, transfer now stores record of player and team (independent from entities)
+
+
 See postman-collection
 
 or

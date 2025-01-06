@@ -22,10 +22,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class FootballPlayerTransferServiceImpl implements FootballPlayerTransferService {
-    private final FootballPlayerTransferRepo footballPlayerTransferRepo;
     private final FootballPlayerService footballPlayerService;
     private final FootballTeamService footballTeamService;
 
+    private final FootballPlayerTransferRepo footballPlayerTransferRepo;
     private final FootballPlayerRecordRepo playerRecordRepo;
     private final FootballTeamRecordRepo teamRecordRepo;
     private final FootballPlayerTransferValidation footballPlayerTransferValidation;
