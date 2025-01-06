@@ -7,6 +7,10 @@ import java.util.Map;
  * Interface helps setup triggers to maintain database integrity
  */
 public interface DbValidation {
+    /**
+     * Error id is used as constraint name, to determine error message
+     * error id = table_name.constraint_name
+     */
     Map<String, String> errorIdToMessageMap();
 
     default List<MySQLTrigger> triggers() {
