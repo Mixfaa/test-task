@@ -9,11 +9,8 @@ import com.mixfa.football_management.misc.dbvalidation.FootballPlayerValidation;
 import com.mixfa.football_management.misc.dbvalidation.FootballTeamValidation;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
+
 public class FastExceptionsFactory implements ExceptionFactory {
     @Override
     public NotFoundException playerNotFound(long id) {
@@ -121,6 +118,7 @@ public class FastExceptionsFactory implements ExceptionFactory {
     private static final ValidationException balanceBoundsEx = new ValidationException(FootballTeamValidation.MSG_BALANCE_BOUND, false);
     private static final ValidationException teamHasForeignPlayerEx = new ValidationException(FootballTeamValidation.MSG_TEAM_HAS_FOREIGN_PLAYER, false);
     private static final ValidationException teamStillHasPlayersEx = new ValidationException(FootballTeamValidation.MSG_TEAM_STILL_HAS_PLAYERS, false);
+
     @Override
     public ValidationException commissionBounds() {
         return commissionBoundsEx;

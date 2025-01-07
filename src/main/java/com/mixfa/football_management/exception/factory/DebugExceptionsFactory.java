@@ -9,11 +9,8 @@ import com.mixfa.football_management.misc.dbvalidation.FootballPlayerValidation;
 import com.mixfa.football_management.misc.dbvalidation.FootballTeamValidation;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 
-@Service
-@Primary
+
 public class DebugExceptionsFactory implements ExceptionFactory {
     @Override
     public NotFoundException playerNotFound(long id) {
