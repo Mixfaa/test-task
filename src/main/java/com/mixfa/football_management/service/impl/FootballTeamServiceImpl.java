@@ -7,10 +7,13 @@ import com.mixfa.football_management.misc.Utils;
 import com.mixfa.football_management.misc.dbvalidation.FootballTeamValidation;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
+import com.mixfa.football_management.model.event.FootballTeamDeletedEvent;
+import com.mixfa.football_management.model.event.FootballTeamUpdatedEvent;
 import com.mixfa.football_management.service.FootballPlayerService;
 import com.mixfa.football_management.service.FootballTeamService;
 import com.mixfa.football_management.service.repo.FootballTeamRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FootballTeamServiceImpl implements FootballTeamService {
     private final FootballTeamRepo footballTeamRepo;
+    private final ApplicationEventPublisher eventPublisher;
     private final FootballPlayerService footballPlayerService;
     private final FootballTeamValidation footballTeamValidation;
 
@@ -72,9 +76,12 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) throws Exception {
         footballTeamValidation.preDeleteValidate(id);
         footballTeamRepo.deleteById(id);
+
+        eventPublisher.publishEvent(new FootballTeamDeletedEvent(id, this));
     }
 
     @Override
@@ -85,6 +92,9 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         footballTeam.addPlayers(players);
         footballTeam = footballTeamRepo.save(footballTeam);
         footballTeamValidation.onSaveValidate(footballTeam);
+
+        eventPublisher.publishEvent(new FootballTeamUpdatedEvent(footballTeam, this));
+
         return footballTeam;
     }
 }

@@ -5,20 +5,25 @@ import com.mixfa.football_management.misc.LimitedPageable;
 import com.mixfa.football_management.misc.dbvalidation.FootballPlayerValidation;
 import com.mixfa.football_management.model.FootballPlayer;
 import com.mixfa.football_management.model.FootballTeam;
+import com.mixfa.football_management.model.event.FootballPlayerDeletedEvent;
+import com.mixfa.football_management.model.event.FootballPlayerUpdatedEvent;
 import com.mixfa.football_management.service.FootballPlayerService;
 import com.mixfa.football_management.service.repo.FootballPlayerRepo;
 import com.mixfa.football_management.service.repo.FootballTeamRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class FootballPlayerServiceImpl implements FootballPlayerService {
     private final FootballPlayerRepo footballPlayerRepo;
+    private final ApplicationEventPublisher eventPublisher;
     private final FootballTeamRepo footballTeamRepo; // maybe, it isn`t that bad? :) Im able, of course, make proxy class, or split logic, but
     private final FootballPlayerValidation footballPlayerValidation;
 
@@ -56,6 +61,8 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
 
         player = footballPlayerRepo.save(player);
         footballPlayerValidation.onSaveValidate(player);
+
+        eventPublisher.publishEvent(new FootballPlayerUpdatedEvent(player, this));
         return player;
     }
 
@@ -80,8 +87,11 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) throws Exception {
         footballPlayerValidation.preDeleteValidate(id);
         footballPlayerRepo.deleteById(id);
+
+        eventPublisher.publishEvent(new FootballPlayerDeletedEvent(id, this));
     }
 }

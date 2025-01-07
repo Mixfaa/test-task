@@ -17,7 +17,7 @@ public class FootballTeamRecord {
     @Id
     @GeneratedValue
     private Long recordId;
-    private long teamId;
+    private Long teamId;
     @Column(length = 128)
     private String name;
     private double transferCommissionPercent;
@@ -34,6 +34,11 @@ public class FootballTeamRecord {
         this.transferCommissionPercent = team.getTransferCommissionPercent();
         this.balance = team.getBalance();
         this.team = team;
+    }
+
+    public FootballTeamRecord(long recordId, FootballTeam team) {
+        this(team);
+        this.recordId = recordId;
     }
 
     public static final String TABLE_NAME = "team_record";

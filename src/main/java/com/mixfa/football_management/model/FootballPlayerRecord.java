@@ -20,7 +20,7 @@ public class FootballPlayerRecord {
     @GeneratedValue
     private Long recordId;
 
-    private long playerId;
+    private Long playerId;
     @Column(length = 35)
     private String firstname;
     @Column(length = 35)
@@ -40,6 +40,11 @@ public class FootballPlayerRecord {
         this.dateOfBirth = player.getDateOfBirth();
         this.careerBeginning = player.getCareerBeginning();
         this.transferredPlayer = player;
+    }
+
+    public FootballPlayerRecord(long recordId, FootballPlayer player) {
+        this(player);
+        this.recordId = recordId;
     }
 
     public static final String TABLE_NAME = "player_record";
