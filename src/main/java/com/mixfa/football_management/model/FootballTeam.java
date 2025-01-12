@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,6 +39,7 @@ public class FootballTeam {
     private double balance;
 
     @OneToMany(mappedBy = "currentTeam")
+    @Fetch(FetchMode.SUBSELECT)
     @JsonManagedReference
     private Set<FootballPlayer> players;
 

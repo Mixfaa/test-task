@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -30,7 +32,7 @@ public class FootballPlayer {
 
     @JsonBackReference
     @JoinColumn(name = "current_team_id")
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private FootballTeam currentTeam;
     private LocalDate dateOfBirth;
     private LocalDate careerBeginning;

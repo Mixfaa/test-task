@@ -21,7 +21,7 @@ public class PlayerTransferException extends CustomizableException implements Ha
     }
 
     public static PlayerTransferException sameTeams(FootballPlayer player, FootballTeam team) {
-        return exceptionFactory.sameTeams(player,team);
+        return exceptionFactory.sameTeams(player, team);
     }
 
     public static PlayerTransferException teamCantAffordPlayer(FootballPlayer player, FootballTeam team) {

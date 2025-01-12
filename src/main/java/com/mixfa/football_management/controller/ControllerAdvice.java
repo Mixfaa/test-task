@@ -8,6 +8,7 @@ import com.mixfa.football_management.service.DBLayerValidation;
 import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Cache;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

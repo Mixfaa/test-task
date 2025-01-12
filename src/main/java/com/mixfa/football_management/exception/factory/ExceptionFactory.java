@@ -49,6 +49,4 @@ public interface ExceptionFactory {
     ValidationException teamHasForeignPlayer();
 
     ValidationException teamStillHasPlayers();
-
-
 }
